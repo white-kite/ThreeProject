@@ -1,0 +1,67 @@
+body {
+	font-family: Arial, sans-serif;
+  	margin: 0;
+  	padding: 0;
+}
+
+#three-canvas {
+	position: absolute;
+	left: 0;
+	top: 0;
+	z-index: -1; /* z-index 값을 조절하여 다른 요소들 위에 위치하도록 조절, 헤더/푸터 보이도록 */
+}
+
+/* 헤더+네비게이션 */
+header {
+	background-color: #333;
+	color: white;
+	padding: 15px;
+	text-align: center;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+  }
+  
+  nav {
+	display: none;
+	background-color: #f1f1f1;
+	padding: 10px;
+  }
+  
+  nav a {
+	display: block;
+	padding: 8px;
+	text-decoration: none;
+	color: #333;
+	margin-bottom: 5px;
+  }
+  
+  .sub-menu {
+	display: none;
+	background-color: #ddd;
+	padding: 8px;
+  }
+  
+  .sub-menu a {
+	margin-bottom: 0;
+  }
+  
+  #companyInfo,
+  #companyGreetings,
+  #businessSubMenu,
+  #three-canvas,
+  #RndCanvas,
+  #CompanyGreetCanvas {
+	display: none;
+  }
+  
+  .content {
+	padding: 20px;
+  }
+  
+  /* Media Query for responsive design */
+  @media screen and (max-width: 600px) {
+	nav a {
+	  text-align: center;
+	}
+  }

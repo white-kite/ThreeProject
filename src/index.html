@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <title>Document2024</title>
+    <link rel="stylesheet" href="./main.css">
+</head>
+<body>
+    <header>
+        <h1>Company Name</h1>
+        
+        <!-- 햄버거 버튼 클릭 시 네비게이션 토글 -->
+        <i class="fas fa-bars" onclick="toggleNav()"></i>
+    </header>
+      
+    <nav id="navbar">
+        <!-- "회사소개" 메뉴에 클릭 이벤트 추가 -->
+        <div>
+            <a href="#" onclick="toggleSubMenu('companySubMenu')">회사소개</a>
+            <!-- "회사소개" 메뉴의 하위 메뉴 -->
+            <div class="sub-menu" id="companySubMenu">
+            <a href="#" onclick="toggleSection('companyInfo')">회사개요</a>
+            <a href="#" onclick="toggleSection('companyGreetings')">인삿말</a>
+            <a href="#" onclick="toggleSection('')">연혁</a>
+            <a href="#" onclick="toggleSection('')">CI</a>
+            <a href="#" onclick="toggleSection('')">기업문화</a>
+            <a href="#" onclick="toggleSection('')">인증및수상</a>
+            <a href="#" onclick="toggleSection('')">찾아오시는길</a>
+            </div>
+        </div>
+        <!-- "사업분야" 메뉴에 클릭 이벤트 추가 -->
+        <div>
+            <a href="#" onclick="toggleSubMenu('businessSubMenu')">사업분야</a>
+            <div class="sub-menu" id="businessSubMenu">
+            <a href="#" onclick="toggleSection('customArea')">SI분야</a>
+            <a href="#" onclick="toggleSection('customArea2')">솔루션 분야</a>
+            <a href="#" onclick="toggleSection('RnDArea')">R&D 분야</a>
+            </div>
+        </div>
+        <!-- "사업실적" 메뉴에 클릭 이벤트 추가 -->
+        <div>
+            <a href="#" onclick="toggleSubMenu('performanceSubMenu')">사업실적</a>
+            <div class="sub-menu" id="performanceSubMenu">
+            <a href="#" onclick="toggleSection('')">사업식적</a>
+            <a href="#" onclick="toggleSection('')">고객레퍼런스</a>
+            <a href="#" onclick="toggleSection('')">파트너사</a>
+            </div>
+        </div>
+        <!-- "인사 및 채용" 메뉴에 클릭 이벤트 추가 -->
+        <div>
+            <a href="#" onclick="toggleSubMenu('careersSubMenu')">인사 및 채용</a>
+            <div class="sub-menu" id="careersSubMenu">
+            <a href="#" onclick="toggleSection('')">인재상</a>
+            <a href="#" onclick="toggleSection('')">인사제도</a>
+            <a href="#" onclick="toggleSection('')">채용절차</a>
+            </div>
+        </div>
+        <!-- "홍보센터" 메뉴에 클릭 이벤트 추가 -->
+        <div>
+            <a href="#" onclick="toggleSubMenu('PRCenterSubMenu')">홍보센터</a>
+            <div class="sub-menu" id="PRCenterSubMenu">
+            <a href="#" onclick="toggleSection('')">뉴스</a>
+            <a href="#" onclick="toggleSection('')">홍보영상</a>
+            <a href="#" onclick="toggleSection('')">자료실</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 첫화면입니다. -->
+    <div class="content" id="welcome">
+        안녕하세요 welcome 화면입니다.
+    </div>
+    <!-- 각 섹션의 내용 -->
+    <div class="content" id="companyInfo">
+        <canvas class="CompanyInfoCanvas" id="CompanyInfoCanvas"></canvas>
+    </div>
+    
+    <div class="content" id="companyGreetings">
+        <canvas class="CompanyGreetCanvas" id="CompanyGreetCanvas"></canvas>
+    </div>
+    
+    <div class="content" id="customArea">
+        <h2>SI분야</h2>
+        <p>시스템 통합에 관한 설명</p>
+        <h2>솔루션 분야</h2>
+        <p>회사가 제공하는 솔루션에 대한 설명</p>
+    </div>
+    <div class="content" id="customArea2">
+		<canvas class="three-canvas" id="three-canvas"></canvas>
+    </div>
+    <div class="content" id="RnDArea">
+        <canvas class="RndCanvas" id="RndCanvas"></canvas>
+    </div>
+
+    <!-- JavaScript로 네비게이션 및 섹션 토글 제어 -->
+    <script>
+        function toggleNav() {
+        var nav = document.getElementById("navbar");
+        nav.style.display = (nav.style.display === "block") ? "none" : "block";
+        }
+
+        // toggleSection을 위한 함수
+        function hideAllSections() {
+            var sections = document.querySelectorAll('.content');
+            sections.forEach(function(section) {
+                section.style.display = "none";
+            });
+        }
+        
+        // toggleSection
+        function toggleSection(sectionId) {
+            hideAllSections();
+
+            var section = document.getElementById(sectionId);
+            if (section) {
+                section.style.display = "block";
+            }
+            
+			// 여기에 본인 컨텐츠 관련 코드 추가
+			if (sectionId === "companyGreetings") {
+                document.getElementById('CompanyGreetCanvas').style.display = "block";
+            } else if (sectionId === "companyInfo") {
+                document.getElementById('CompanyInfoCanvas').style.display = "block";
+            } else if (sectionId === "RnDArea") {
+                document.getElementById('RndCanvas').style.display = "block";
+            }
+
+        }
+    
+        /* 서브 메뉴 열기 함수 */
+        function toggleSubMenu(subMenuId) {
+        	var subMenu = document.getElementById(subMenuId);
+        	subMenu.style.display = (subMenu.style.display === "block") ? "none" : "block";
+        }
+    </script>
+    </body>
+</html>
