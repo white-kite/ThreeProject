@@ -29,7 +29,35 @@ export default function RndCanvas() {
 import RndCanvas from './JsZip/Business/Rnd';
 RndCanvas();
 
-4. 
+4. index.html을 수정한다.
+<b>* 이름 변경에 유의하세요!</b>
+아래와 같이 만들어둔 메뉴를 선택해서 수정한다.
+<a href="#" onclick="toggleSection('RnDArea')">R&D 분야</a>
+
+각 섹션의 내용 주석 아래에 적절한 곳에 본인이 작성한 Canvas 명을 적절히 추가해준다.
+<div class="content" id="RnDArea">
+   <canvas class="RndCanvas" id="RndCanvas"></canvas>
+</div>
+
+toggleSection에 적절한 else if문 작성
+// 여기에 본인 컨텐츠 관련 코드 추가 부분에 아래와 같이 작성
+else if (sectionId === "RnDArea") {
+   document.getElementById('RndCanvas').style.display = "block";
+}
+
+5. 여기까지 정확히 했는데 canvas가 막 뜬다면...
+main.css에서 
+  #companyInfo,
+  #companyGreetings,
+  #businessSubMenu,
+  #three-canvas,
+  #RndCanvas,
+  #CompanyGreetCanvas {
+	display: none;
+  }
+  이 부분에 본인의 Canvas id를 추가한다.
+
+더 좋은 방법이 있다면 공유바랍니다..
 
 ----------------------------------------------------
 
