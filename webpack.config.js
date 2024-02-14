@@ -70,8 +70,8 @@ module.exports = {
 				{ from: "./src/textures/mcstyle", to: "./textures/mcstyle" },
 				{ from: "./src/textures", to: "./textures" },
 				{ from: "./src/JsZip", to: "./JsZip" },
-				// { from: "./src/images", to: "./images" },
-				// { from: "./src/models", to: "./models" },
+				{ from: "./src/images", to: "./images" },
+				{ from: "./src/models", to: "./models" },
 				// { from: "./src/sounds", to: "./sounds" }
 			],
 		})

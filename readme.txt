@@ -24,6 +24,10 @@ JsZip 폴더
 
 export default function RndCanvas() {
 
+** 여기 쿼리 셀렉터도 변경한다.
+const canvas = document.querySelector('#three-canvas');
+>> const canvas = document.querySelector('#RndCanvas');
+
 3. main.js에 아래와 같이 본인이 작성한 function명을 정의해준다.
 
 import RndCanvas from './JsZip/Business/Rnd';
@@ -45,7 +49,7 @@ else if (sectionId === "RnDArea") {
    document.getElementById('RndCanvas').style.display = "block";
 }
 
-5. 여기까지 정확히 했는데 canvas가 막 뜬다면...
+5. 여기까지 정확히 하신 후
 main.css에서 
   #companyInfo,
   #companyGreetings,
@@ -55,13 +59,13 @@ main.css에서
   #CompanyGreetCanvas {
 	display: none;
   }
-  이 부분에 본인의 Canvas id를 추가한다.
+  이 부분에 본인의 Canvas id를 추가한다. 이렇게 해야 컨텐츠들이 동시에 뜨는 일이 없는 듯 함
 
 더 좋은 방법이 있다면 공유바랍니다..
 
 ----------------------------------------------------
 
-1. 패키지 설치
+1. 패키지 설치 >> clone 했을시 2번부터 해보세요, npm 설치부터하면 패키지 충돌날 수 있음
 터미널에 아래 점선 사이의 내용을 붙여 넣고 엔터를 누르세요.
 ----------
 npm i -D @babel/cli @babel/core @babel/preset-env babel-loader clean-webpack-plugin copy-webpack-plugin core-js cross-env html-webpack-plugin source-map-loader terser-webpack-plugin webpack webpack-cli webpack-dev-server
@@ -69,7 +73,7 @@ npm i -D @babel/cli @babel/core @babel/preset-env babel-loader clean-webpack-plu
 npm i three
 ----------
 
-2. 개발용 서버 구동
+2. 개발용 서버 구동 << clone 했을시 이걸 먼저 해보세요, npm 설치부터하면 패키지 충돌날 수 있음
 터미널에 아래 점선 사이의 내용을 붙여 넣고 엔터를 누르세요.
 ----------
 npm start

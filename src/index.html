@@ -45,9 +45,9 @@
         <div>
             <a href="#" onclick="toggleSubMenu('performanceSubMenu')">사업실적</a>
             <div class="sub-menu" id="performanceSubMenu">
-            <a href="#" onclick="toggleSection('')">사업식적</a>
+            <a href="#" onclick="toggleSection('')">사업실적</a>
             <a href="#" onclick="toggleSection('')">고객레퍼런스</a>
-            <a href="#" onclick="toggleSection('')">파트너사</a>
+            <a href="#" onclick="toggleSection('PartnerCompArea')">파트너사</a>
             </div>
         </div>
         <!-- "인사 및 채용" 메뉴에 클릭 이벤트 추가 -->
@@ -96,6 +96,10 @@
         <canvas class="RndCanvas" id="RndCanvas"></canvas>
     </div>
 
+    <div class="content" id="PartnerCompArea">
+        <canvas class="PartnerCompCanvas" id="PartnerCompCanvas"></canvas>
+    </div>
+
     <!-- JavaScript로 네비게이션 및 섹션 토글 제어 -->
     <script>
         function toggleNav() {
@@ -127,6 +131,8 @@
                 document.getElementById('CompanyInfoCanvas').style.display = "block";
             } else if (sectionId === "RnDArea") {
                 document.getElementById('RndCanvas').style.display = "block";
+            } else if (sectionId === "PartnerCompArea"){
+                document.getElementById('PartnerCompCanvas').style.display = "block";
             }
 
         }

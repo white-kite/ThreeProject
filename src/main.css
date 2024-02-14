@@ -51,7 +51,8 @@ header {
   #businessSubMenu,
   #three-canvas,
   #RndCanvas,
-  #CompanyGreetCanvas {
+  #CompanyGreetCanvas,
+  #PartnerCompCanvas {
 	display: none;
   }
   
