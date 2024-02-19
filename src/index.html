@@ -45,8 +45,8 @@
         <div>
             <a href="#" onclick="toggleSubMenu('performanceSubMenu')">사업실적</a>
             <div class="sub-menu" id="performanceSubMenu">
-            <a href="#" onclick="toggleSection('')">사업실적</a>
-            <a href="#" onclick="toggleSection('')">고객레퍼런스</a>
+            <a href="#" onclick="toggleSection('BizPerf')">사업실적</a>
+            <a href="#" onclick="toggleSection('CustRefArea')">고객레퍼런스</a>
             <a href="#" onclick="toggleSection('PartnerCompArea')">파트너사</a>
             </div>
         </div>
@@ -99,6 +99,10 @@
     <div class="content" id="PartnerCompArea">
         <canvas class="PartnerCompCanvas" id="PartnerCompCanvas"></canvas>
     </div>
+    
+    <div class="content" id="CustRefArea">
+        <canvas class="CustRefCanvas" id="CustRefCanvas"></canvas>
+    </div>
 
     <!-- JavaScript로 네비게이션 및 섹션 토글 제어 -->
     <script>
@@ -133,6 +137,8 @@
                 document.getElementById('RndCanvas').style.display = "block";
             } else if (sectionId === "PartnerCompArea"){
                 document.getElementById('PartnerCompCanvas').style.display = "block";
+            } else if (sectionId === "CustRefArea"){
+                document.getElementById('CustRefCanvas').style.display = "block";
             }
 
         }
