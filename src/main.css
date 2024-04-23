@@ -1,8 +1,8 @@
 body {
 	font-family: Arial, sans-serif;
-  	margin: 0;
+  	margin: 1;
   	padding: 0;
-}
+}   
 
 #three-canvas {
 	position: absolute;
@@ -12,7 +12,7 @@ body {
 }
 
 /* 헤더+네비게이션 */
-header {
+header {   
 	background-color: #333;
 	color: white;
 	padding: 15px;
