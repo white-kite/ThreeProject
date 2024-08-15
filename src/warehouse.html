@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+	<link rel="stylesheet" href="./main.css">
+	<style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: url('/models/kenney/item/gift/background.png') no-repeat center center fixed;
+            background-size: cover;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .inventory {
+            width: 100%;
+            height: 100%;
+            border: 2px solid #ccc;
+            padding: 20px;
+            margin: 0;
+            background-color: rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+        }
+        .inventory h2 {
+            text-align: center;
+            color: #ff0000;
+            margin-bottom: 20px;
+            font-size: 50px;
+        }
+        .title-color-1 { color: red; animation: bounce 1s infinite; }
+        .title-color-2 { color: green; animation: bounce 1s infinite 0.1s; }
+        .title-color-3 { color: gold; animation: bounce 1s infinite 0.2s; }
+        .title-color-4 { color: blue; animation: bounce 1s infinite 0.3s; }
+        .title-color-5 { color: purple; animation: bounce 1s infinite 0.4s; }
+        .title-color-6 { color: pink; animation: bounce 1s infinite 0.5s; }
+        .title-color-7 { color: cyan; animation: bounce 1s infinite 0.6s; }
+        .title-color-8 { color: orange; animation: bounce 1s infinite 0.7s; }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+        .inventory-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 10px;
+            flex-grow: 1;
+            overflow-y: auto;
+        }
+        .inventory-item {
+            width: 100px;
+            height: 100px;
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 5px;
+            box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1);
+            transition: box-shadow 0.3s, border 0.3s;
+            position: relative;
+        }
+        .inventory-item img {
+            max-width: 80px;
+            max-height: 80px;
+            transition: transform 0.3s;
+        }
+        .inventory-item:hover {
+            border: 2px solid #ff0000;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        }
+        .inventory-item:hover img {
+            transform: scale(1.2);
+        }
+        .tooltip {
+            display: none;
+            position: absolute;
+            width: 100px;
+            height: 50px;
+            padding: 5px;
+            background-color: #ffffe0; /* 메모장 색상 */
+            color: black;
+            border-radius: 5px;
+            font-size: 12px;
+            white-space: nowrap;
+            z-index: 10;
+            box-sizing: border-box;
+        }
+        .selected-gift {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 150px;
+            padding: 10px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+        .selected-gift img {
+            max-width: 50px;
+            max-height: 50px;
+            display: block;
+            margin: 0 auto 10px auto;
+        }
+        .take-button {
+            margin-top: 10px;
+            padding: 5px 10px;
+            background-color: #ff0000;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .take-button:hover {
+            background-color: #cc0000;
+        }
+    </style>
+
+	
+</head>
+<body>		
+	<div class="inventory">
+        <h2>
+            <span class="title-color-1">산</span>
+            <span class="title-color-2">타</span>
+            <span class="title-color-3">할</span>
+            <span class="title-color-4">아</span>
+            <span class="title-color-5">버</span>
+            <span class="title-color-6">지</span>
+            <span class="title-color-7"> </span>
+            <span class="title-color-8">인</span>
+            <span class="title-color-1">벤</span>
+            <span class="title-color-2">토</span>
+            <span class="title-color-3">리</span>
+        </h2>
+        <div class="inventory-grid" id="inventory-grid">
+            <!-- 동적으로 추가되는 아이템 -->
+        </div>
+    </div>
+    <div class="tooltip" id="global-tooltip"></div>
+    <div class="selected-gift" id="selected-gift">
+        <img src="" alt="" id="selected-gift-image">
+        <div id="selected-gift-text"></div>
+        <button class="take-button" id="take-button">가져가기</button>
+    </div>
+
+    <script>
+        // 미리 정의된 선물 배열
+        const gifts = [
+            { src: '/models/kenney/item/gift/gift1.png', desc: '빨간 선물 상자' },
+            { src: '/models/kenney/item/gift/gift2.png', desc: '초록 선물 상자' },
+            { src: '/models/kenney/item/gift/gift3.png', desc: '노란 선물 상자' },
+            { src: '/models/kenney/item/gift/gift4.png', desc: '흰색 선물 상자' },
+            { src: '/models/kenney/item/gift/gift5.png', desc: '파랑 선물 상자' },
+            { src: '/models/kenney/item/gift/gift6.png', desc: '보라 선물 상자' },
+            { src: '/models/kenney/item/gift/gift7.png', desc: '하늘 선물 상자' },
+            { src: '/models/kenney/item/gift/gift8.png', desc: '빨강 선물 상자' },
+            { src: '/models/kenney/item/gift/gift9.png', desc: '금색 선물 상자' },
+            { src: '/models/kenney/item/gift/gift10.png', desc: '파랑 선물 상자' }
+        ];
+
+        // 인벤토리 그리드에 아이템을 추가하는 함수
+        function loadGifts() {
+            const inventoryGrid = document.getElementById('inventory-grid');
+            const tooltip = document.getElementById('global-tooltip');
+            const selectedGift = document.getElementById('selected-gift');
+            const selectedGiftImage = document.getElementById('selected-gift-image');
+            const selectedGiftText = document.getElementById('selected-gift-text');
+            const takeButton = document.getElementById('take-button');
+
+            gifts.forEach(gift => {
+                const newItem = document.createElement('div');
+                newItem.className = 'inventory-item';
+                newItem.innerHTML = `<img src="${gift.src}" alt="선물">`;
+                newItem.addEventListener('mouseover', (event) => {
+                    tooltip.style.display = 'block';
+                    tooltip.textContent = gift.desc;
+                    const rect = newItem.getBoundingClientRect();
+                    tooltip.style.left = `${rect.left + window.scrollX + rect.width + 5}px`;
+                    tooltip.style.top = `${rect.top + window.scrollY + 5}px`;
+                });
+                newItem.addEventListener('mousemove', (event) => {
+                    tooltip.style.left = `${event.clientX + 10}px`;
+                    tooltip.style.top = `${event.clientY + 10}px`;
+                });
+                newItem.addEventListener('mouseout', () => {
+                    tooltip.style.display = 'none';
+                });
+                newItem.addEventListener('click', () => {
+                    selectedGiftImage.src = gift.src;
+                    selectedGiftText.textContent = gift.desc;
+                });
+                inventoryGrid.appendChild(newItem);
+            });
+
+            // 가져가기 버튼 클릭 이벤트 리스너
+            takeButton.addEventListener('click', () => {
+                alert('선물을 가져갑니다!');
+            });
+        }
+
+        // 페이지 로드 시 선물 배열을 로드
+        window.onload = loadGifts;
+    </script>
+</body>
+</html>

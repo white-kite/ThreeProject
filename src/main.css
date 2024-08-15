@@ -1,69 +1,111 @@
+@font-face {
+    font-family: 'DNFBitBit';
+    src: url('./DNFBitBitTTF.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+* {
+    font-family: 'DNFBitBit', sans-serif !important;	
+	cursor: url('/models/kenney/item/weapon/shuriken05.png'),url('/models/kenney/item/weapon/shuriken05.png'),url('/models/kenney/item/weapon/shuriken05.png'),	auto;
+}
 body {
-	font-family: Arial, sans-serif;
-  	margin: 1;
-  	padding: 0;
-}   
-
+	margin: 0;
+	font-family: 'DNFBitBit', sans-serif !important;		  
+}
 #three-canvas {
 	position: absolute;
 	left: 0;
 	top: 0;
-	z-index: -1; /* z-index 값을 조절하여 다른 요소들 위에 위치하도록 조절, 헤더/푸터 보이도록 */
+}
+.centered-div {
+	position: fixed;
+	z-index: 1;
+	top: 70%;
+	left: 50%;
+	transform: translate(-50%, -50%);	
+	
+}
+.centered-div2 {
+	position: fixed;
+	z-index: 1;
+	top: 70%;
+	left: 60%;
+	transform: translate(-50%, -50%);	
+	padding: 20px; /* 필요에 따라 패딩 추가 */	
 }
 
-/* 헤더+네비게이션 */
-header {   
-	background-color: #333;
+.startBtn{	
+	display: inline-block; /* 크기 설정을 위해 block 또는 inline-block 설정 */
+    width: 81px; /* 필요한 너비 설정 */
+    height: 50px; /* 필요한 높이 설정 */
+	background-size: 113px 100px; /* 배경 이미지 크기 설정 (너비 300px, 높이 150px) *
+	background-size: cover; /* 이미지를 전체 영역에 맞추기 */
+    background-position: center; /* 이미지를 중앙에 위치시키기 */    
+    text-decoration: none; /* 링크 밑줄 제거 */	
+	background-repeat: no-repeat;
+	background-image: url('/models/kenney/background/btn.jpg');
+	text-align: center; /* 텍스트 중앙 정렬 */
+	line-height: 50px; /* 텍스트 수직 중앙 정렬을 위해 높이와 동일하게 설정 */
+	font-size: 25px;
+	margin-right: 50px;
 	color: white;
-	padding: 15px;
-	text-align: center;
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-  }
-  
-  nav {
-	display: none;
-	background-color: #f1f1f1;
-	padding: 10px;
-  }
-  
-  nav a {
+	border-radius: 12px; /* 모서리 둥글기 */
+	border: 2px solid white; /* 흰색 테두리 */
+}
+
+.btn-success{
+	width: 100px; /* 필요한 너비 설정 */
+	height: 70px; /* 필요한 너비 설정 */
+	background-size: 120px 100px; 
+}
+.sakura{
+	background: linear-gradient(120deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)) !important;
+	border-radius : 10px 10px !important;
+	width: 10px !important;
+	height: 10px !important;
+}
+
+.gameTitle{
+	position: absolute;
+	top: 20%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	z-index: 1;	
+	font-size: 50px;
+}
+
+    
+.start-btn{
+    text-align: center;
 	display: block;
-	padding: 8px;
-	text-decoration: none;
-	color: #333;
-	margin-bottom: 5px;
-  }
-  
-  .sub-menu {
+	margin:5px;
+    font-weight: bold;
+    padding: 10px 10px 10px 10px ;
+    background-color: lightgray;
+    text-shadow: -1px -1px black, 1px 1px white;
+    color: gray;
+    -webkit-border-radius: 7px;
+	-moz-border-radius: 7px;
+	-o-border-radius: 7px;
+	border-radius: 7px;
+    box-shadow: 0 .2em gray; 
+    cursor: pointer;
+	width: 140px;
+}
+.start-btn:active {
+	box-shadow: none;
+	position: relative;
+	top: .2em;
+}
+
+.btn-container{
+	position: fixed;
+	z-index: 1;
+	top: 70%;
+	left: 50%;
+	transform: translate(-50%, -50%);	
+}
+
+.hide {
 	display: none;
-	background-color: #ddd;
-	padding: 8px;
-  }
-  
-  .sub-menu a {
-	margin-bottom: 0;
-  }
-  
-  #companyInfo,
-  #companyGreetings,
-  #businessSubMenu,
-  #three-canvas,
-  #RndCanvas,
-  #CompanyGreetCanvas,
-  #PartnerCompCanvas,
-  #CustRefCanvas {
-	display: none;
-  }
-  
-  .content {
-	padding: 20px;
-  }
-  
-  /* Media Query for responsive design */
-  @media screen and (max-width: 600px) {
-	nav a {
-	  text-align: center;
-	}
-  }
+}
