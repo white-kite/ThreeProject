@@ -98,7 +98,13 @@ export default function example2() {
     const scene = new THREE.Scene();
 
     
-	const camera = new THREE.OrthographicCamera(-window.innerWidth / 100, window.innerWidth / 100, window.innerHeight / 100, -window.innerHeight / 100, 0, 10);
+	let aspectRatio = window.innerWidth / window.innerHeight;
+    const cameraHeight = 6; // 기본 단위 높이
+    const camera = new THREE.OrthographicCamera(
+        -cameraHeight * aspectRatio, cameraHeight * aspectRatio,
+        cameraHeight, -cameraHeight,
+        0, 10
+    );
 
 
     camera.position.set(0, 0, 3);

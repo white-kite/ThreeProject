@@ -44,7 +44,14 @@ export default function example() {
 
 	//cm1.scene.background = new THREE.Color(0xffffff); // 흰색 배경
 	// Camera
-	const camera = new THREE.OrthographicCamera(-window.innerWidth / 100, window.innerWidth / 100, window.innerHeight / 100, -window.innerHeight / 100, 0, 10);
+	let aspectRatio = window.innerWidth / window.innerHeight;
+    const cameraHeight = 6; // 기본 단위 높이
+	//const cameraHeight = 20; // 기본 단위 높이
+    const camera = new THREE.OrthographicCamera(
+        -cameraHeight * aspectRatio, cameraHeight * aspectRatio,
+        cameraHeight, -cameraHeight,
+        0, 10
+    );
 	
 	/*
 	const camera = new THREE.PerspectiveCamera(
@@ -188,13 +195,13 @@ export default function example() {
 	}
 		
 	// 반복해서 배치할 스프라이트 생성
-	const numSpritesX = 32; // x 축으로 필요한 스프라이트 개수
-	const numSpritesY = 32; // y 축으로 필요한 스프라이트 개수
-	const spacingX = 32;     // x 축 스프라이트 간의 간격
-	const spacingY = 32;     // y 축 스프라이트 간의 간격
+	const numSpritesX = 15; // x 축으로 필요한 스프라이트 개수
+	const numSpritesY = 15; // y 축으로 필요한 스프라이트 개수
+	const spacingX = 1;     // x 축 스프라이트 간의 간격
+	const spacingY = 1;     // y 축 스프라이트 간의 간격
 
-	for(var i = -32 ; i < 32 ; i++){
-		for(var j = -32 ; j < 32 ; j++){
+	for(var i = -numSpritesX ; i < numSpritesX ; i++){
+		for(var j = -numSpritesY ; j < numSpritesY ; j++){
 			var sp = sprite2.clone();
 			sp.position.z = -3;
 			const newMaterial = new THREE.SpriteMaterial({ map: tileArray[getRandomInt()] }); // 변경할 SpriteMaterial 생성
@@ -204,38 +211,58 @@ export default function example() {
 	}
 	
 	let sprites = []; // 스프라이트를 담을 배열
+	const back1 = new THREE.Object3D();
+	const back2 = new THREE.Object3D();
+	const back3 = new THREE.Object3D();
+	const back4 = new THREE.Object3D();
+
+	back1.position.set(0, 0, 0);
 	for (let i = -numSpritesX; i < numSpritesX; i++) {
         for (let j = -numSpritesY; j < numSpritesY; j++) {
-			var sp = sprite2.clone();
-			const newMaterial = new THREE.SpriteMaterial({ map: tileArray[getRandomInt()] }); // 변경할 SpriteMaterial 생성
-			newMaterial.map = tileArray[getRandomInt()]
-			sp.material = newMaterial;
+			for(let k = 0 ; k < 4 ; k++){				
+				var sp = sprite2.clone();
+				const newMaterial = new THREE.SpriteMaterial({ map: tileArray[getRandomInt()] }); // 변경할 SpriteMaterial 생성
+				newMaterial.map = tileArray[getRandomInt()]
+				sp.material = newMaterial;
 
-            // 스프라이트 위치 설정 (x, y 축 반복해서 배치)
-            sp.position.set(i * spacingX, j * spacingY, 0);
+				// 스프라이트 위치 설정 (x, y 축 반복해서 배치)
+				sp.position.set(i * spacingX, j * spacingY, 0);
+				sp.scale.set(1,1,0);
+				// 스프라이트 크기 조절
+				
 
-            // 스프라이트 크기 조절
-            
-
-            // 스프라이트를 scene에 추가
-            //cm1.scene.add(sp);
-
-            // 스프라이트를 배열에 저장
-            sprites.push(sp);
+				// 스프라이트를 scene에 추가
+				//cm1.scene.add(sp);
+				if(k==0){
+					back1.add(sp);
+				}else if(k == 1){
+					back2.add(sp);
+				}else if(k == 2){
+					back3.add(sp);
+				}else if(k == 3){
+					back4.add(sp);
+				}
+				
+				// 스프라이트를 배열에 저장
+				//sprites.push(sp);
+			}
         }
     }
-	
-	
+	back1.position.set(0, 0, -1);
+	back2.position.set(30, 0, -1);
+	back3.position.set(0, 30, -1);
+	back4.position.set(30, 30, -1);
+	cm1.scene.add(back1, back2 , back3 , back4);
 
 	const spriteMaterial = new THREE.SpriteMaterial({ map: santaRightWalkArray[0] }); // 첫 번째 프레임으로 초기화
 
 	const sprite = new THREE.Sprite(spriteMaterial);
-	const innerSanta = new THREE.Object3D();
-	innerSanta.position.set(0,0,0,);
+	
+	
 	sprite.material.side = THREE.DoubleSide;
 	sprite.scale.set(1, 1, 1); // 스프라이트 크기 조정
 	sprite.rotation.z = -Math.PI; // z 축을 기준으로 180도 반대 방향 회전 (라디안 값)
-	sprite.add(innerSanta);
+	
 	/*사탕 발사 start*/
 	const weapon1Image = loader.load(`/models/kenney/item/weapon/weapon1.png`);
 	const spriteMaterialWeapon1 = new THREE.SpriteMaterial({ map: weapon1Image }); // 첫 번째 프레임으로 초기화
@@ -245,7 +272,7 @@ export default function example() {
 	const weapon1sphereShape = new Sphere(0.5); // Radius 1
 	const weapon1sphereBody = new Body({ mass: 1000, position: new Vec3(50, 0, 0) });
 	weapon1sphereBody.name="사탕";
-	weapon1sphereBody.addShape(weapon1sphereShape);
+	//weapon1sphereBody.addShape(weapon1sphereShape); --주석해제 필요
 	world.addBody(weapon1sphereBody);
 	/*사탕 발사 start */
 
@@ -320,11 +347,17 @@ export default function example() {
 	world.addBody(sphereBody2);
 	*/
 	
-	var enemy1 = new Enemy1({three:THREE , attakFunc : updateHP , world:world , hp: 1});
+	var enemy1 = new Enemy1({three:THREE , attakFunc : updateHP , world:world , hp: 10 , camera: camera});
 	
 	var holyWater = new HolyWater({three:THREE , world2:world , noActiveWorld : noActiveWorld});
-	var shuriken = new Shuriken({three:THREE , world2:world , noActiveWorld : noActiveWorld , target: sprite});		
-	innerSanta.add(shuriken.sprite , shuriken.sprite1 , shuriken.sprite2 , shuriken.sprite3);
+	var shuriken = new Shuriken({three:THREE , world2:world , noActiveWorld : noActiveWorld , target: sprite, damage: 1});		
+	shuriken.objectVisible(true, 1);
+	
+	shuriken.objectVisible(true, 2);
+	shuriken.objectVisible(true, 3);
+	shuriken.objectVisible(true, 4);
+	//innerSanta.add();
+	//innerSanta.add(shuriken.sprite , shuriken.sprite1 , shuriken.sprite2 , shuriken.sprite3);
 
 	cm1.scene.add(sprite);
 	//충돌 애니메이션
@@ -411,6 +444,7 @@ export default function example() {
 		wallRight.position.set(camera.position.x + frustumWidth / 2 - wallThickness / 2, 0, 0);
 	}
 	function draw(time) {			
+		updateBackgroundPosition(sprite);
 		//산타물리		
 		santaBody.position.copy(sprite.position);		
 
@@ -426,8 +460,7 @@ export default function example() {
 		}
 
 		const delta = clock.getDelta();
-
-		innerSanta.rotation.z += 2*delta;
+		
 
 		world.step(1 / 120 , delta , 10);
 		noActiveWorld.step(1 / 120 , delta , 10);
@@ -515,9 +548,77 @@ export default function example() {
 		//camera.position.z = 0.001;
 		
 
+		shuriken.Animation(time);
+
 		renderer.render(cm1.scene, camera);
 		renderer.setAnimationLoop(draw);
 	}
+
+
+
+	function updateBackgroundPosition(character) {
+		const charX = character.position.x;
+		const charY = character.position.y;
+	
+		const tileSize = 30;
+	
+		// 오른쪽 이동 시 왼쪽 타일을 오른쪽으로 이동
+		if (charX - back1.position.x > tileSize) {
+			back1.position.x += tileSize * 2;
+		}
+		if (charX - back3.position.x > tileSize) {
+			back3.position.x += tileSize * 2;
+		}
+		if (charX - back2.position.x > tileSize) {
+			back2.position.x += tileSize * 2;
+		}
+		if (charX - back4.position.x > tileSize) {
+			back4.position.x += tileSize * 2;
+		}
+	
+		// 왼쪽 이동 시 오른쪽 타일을 왼쪽으로 이동
+		if (back1.position.x - charX > tileSize) {
+			back1.position.x -= tileSize * 2;
+		}
+		if (back3.position.x - charX > tileSize) {
+			back3.position.x -= tileSize * 2;
+		}
+		if (back2.position.x - charX > tileSize) {
+			back2.position.x -= tileSize * 2;
+		}
+		if (back4.position.x - charX > tileSize) {
+			back4.position.x -= tileSize * 2;
+		}
+	
+		// 위로 이동 시 아래 타일을 위로 이동
+		if (charY - back1.position.y > tileSize) {
+			back1.position.y += tileSize * 2;
+		}
+		if (charY - back2.position.y > tileSize) {
+			back2.position.y += tileSize * 2;
+		}
+		if (charY - back3.position.y > tileSize) {
+			back3.position.y += tileSize * 2;
+		}
+		if (charY - back4.position.y > tileSize) {
+			back4.position.y += tileSize * 2;
+		}
+	
+		// 아래로 이동 시 위 타일을 아래로 이동
+		if (back1.position.y - charY > tileSize) {
+			back1.position.y -= tileSize * 2;
+		}
+		if (back2.position.y - charY > tileSize) {
+			back2.position.y -= tileSize * 2;
+		}
+		if (back3.position.y - charY > tileSize) {
+			back3.position.y -= tileSize * 2;
+		}
+		if (back4.position.y - charY > tileSize) {
+			back4.position.y -= tileSize * 2;
+		}
+	}
+	
 
 	document.addEventListener('keydown', (event) => {
 		if (event.key === 'ArrowRight') {
@@ -592,3 +693,4 @@ export default function example() {
 	
 	draw();
 }
+

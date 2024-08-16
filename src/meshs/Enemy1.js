@@ -28,8 +28,37 @@ export class Enemy1 extends Stuff{
         this.hp = info.hp;       
         this.isDead = false;  
         this.curHp = this.hp;
-
+        this.isInvincible = false; // 무적 상태를 나타내는 플래그
         this.giftArray = [];
+
+        //음량 추가
+         // Three.js에서 오디오 리스너 추가
+         this.listener = new THREE.AudioListener();
+         info.camera.add(this.listener); // 카메라에 오디오 리스너 추가
+ 
+         // 오디오 객체 생성
+         this.hitSound = new THREE.Audio(this.listener);
+ 
+         // 오디오 로더로 소리 파일 로드
+         
+
+          // 사운드를 저장할 객체
+        this.sounds = {};
+
+        // 여러 개의 사운드를 로드하고 저장
+        const audioLoader = new THREE.AudioLoader();
+
+        audioLoader.load('/models/kenney/sound/hit1.mp3', (buffer) => {
+            this.sounds['hit1'] = buffer;
+        });
+
+        audioLoader.load('/models/kenney/sound/die1.mp3', (buffer) => {
+            this.sounds['die1'] = buffer;
+        });
+
+
+        //음량 추가
+
 
         for (let i = 0; i < frameCount; i++) {
 		
@@ -66,15 +95,16 @@ export class Enemy1 extends Stuff{
         const spriteMaterial = new THREE.SpriteMaterial({ map: this.enemyIdleArray[0] }); // 첫 번째 프레임으로 초기화
 
         this.sprite = new THREE.Sprite(spriteMaterial);
+        
         this.sprite.position.set(0,5,0);
         
-        this.sprite.material.side = THREE.DoubleSide;
+        this.sprite.material.side = THREE.DoubleSide;        
         this.sprite.scale.set(1, 1, 0); // 스프라이트 크기 조정
         
         this.particle1Shape = new Sphere(0.5); // Radius 1
         this.particle1Body = new Body({ mass: 0, position: new Vec3(0, 1000, 0)});
         this.particle1Body.addShape(this.particle1Shape);
-        this.particle1Body.name="enemy";
+        this.particle1Body.name="enemy";    
         this.particle1Body.object=this;
         this.particle1Body.sprite = this.sprite;
         this.world.addBody(this.particle1Body);
@@ -82,7 +112,7 @@ export class Enemy1 extends Stuff{
             if(event.body.name == "사탕"){
                 this.Dead();
             }
-            if(this.particle1Body.name="선물"){
+            if(this.particle1Body.name=="선물"){
                 if(event.body.name == "산타") {
                     this.sprite.visible = false;
                 }
@@ -90,28 +120,69 @@ export class Enemy1 extends Stuff{
           });
 
         
-        
-
+         
         cm1.scene.add(this.sprite);
       
 
         //this.setCannonBody();
 
     }
-    HitMe(damage){
-        if(this.curHp > 0){
-            this.curHp -= damage;
-            if(this.curHp < 0){
-                this.Dead();
-            }
-        }        
+
+    playSound(name) {
+        if (this.sounds[name]) {
+            this.hitSound.setBuffer(this.sounds[name]); // 해당 사운드를 할당
+            this.hitSound.setVolume(0.5); // 볼륨 조정
+            this.hitSound.play(); // 사운드 재생
+        } else {
+            console.warn(`Sound ${name} not found!`);
+        }
     }
-    Dead(){               
+
+    HitMe(damage){        
+        if (this.isInvincible) {
+            return; // 무적 상태에서는 대미지를 무시
+        }
+        if (this.curHp > 0) {
+            this.curHp -= damage;
+            if (this.curHp <= 0) {
+                this.Dead();
+            } else {
+                
+                this.becomeInvincible(0.5); // 0.5초 동안 무적
+            }
+        }
+    }
+
+    becomeInvincible(duration) {
+        this.isInvincible = true; // 무적 상태로 전환
+
+        let blinkInterval;
+        let blinkCount = 0;
+        const maxBlinks = 5; // 0.5초 동안 깜박거림 (100ms 간격으로 5번)
+
+        blinkInterval = setInterval(() => {
+            this.sprite.visible = !this.sprite.visible; // 스프라이트 깜박거리기
+            blinkCount++;            
+            this.playSound('hit1'); // 대미지를 입었을 때 사운드 재생            
+            if (blinkCount >= maxBlinks) {
+                clearInterval(blinkInterval);
+                this.sprite.visible = true; // 원래 상태로 복구                
+            }
+        }, 100); // 100ms마다 깜박임
+
+        setTimeout(() => {
+            this.isInvincible = false; // 무적 상태 해제
+        }, duration * 1000); // 지정된 기간(0.5초) 후 무적 해제
+    }
+
+    Dead(){         
+        this.hitSound.stop();
+        this.playSound('die1'); // 대미지를 입었을 때 사운드 재생     
         this.isDead = true;
         this.particle1Body.name="선물";        
         
         this.sprite.material.map = this.giftArray[0]; 
-        //setTimeout(() => this.executeOnceAfterOneSecond(this.particle1Body), 1000);
+        
     }
     
     executeOnceAfterOneSecond(particle1Body) {
@@ -119,6 +190,7 @@ export class Enemy1 extends Stuff{
     }
 
     Animation(currentFrame , target , delta){ 
+       
         this.particle1Body.position.copy(this.sprite.position);        
         
         if(this.isDead == false){
@@ -161,7 +233,7 @@ export class Enemy1 extends Stuff{
         }
         
         
-		
+        
 
     }
 }

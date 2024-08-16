@@ -128,7 +128,7 @@ module.exports = {
 				{ from: "./src/models/kenney/item/gift", to: "./models/kenney/item/gift" },
 				{ from: "./src/DNFBitBitTTF.ttf", to: "./DNFBitBitTTF.ttf" },
 				
-				
+				{ from: "./src/models/kenney/sound", to: "./models/kenney/sound" },
 				// { from: "./src/images", to: "./images" },
 				// { from: "./src/models", to: "./models" },
 				// { from: "./src/sounds", to: "./sounds" }

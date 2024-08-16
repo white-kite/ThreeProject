@@ -24,8 +24,10 @@ export class Shuriken extends Stuff{
         this.sprites = [];
         const loader = new THREE.TextureLoader();
 
-        this.holyWaterArray = [];
+        
 
+        this.holyWaterArray = [];
+        this.damage = info.damage;
        
         var frameCount = 1;
        
@@ -65,14 +67,52 @@ export class Shuriken extends Stuff{
         
         this.sprite3.position.set(-2,0,0);
 
-        
+        for(var i = 1 ; i < 5 ; i++){
+            this.objectVisible(false , i);
+        }
+       
 
+        this.particleShape = new Sphere(1); // Radius 1
+        this.particleBody = new Body({ mass: 10, position: new Vec3(0, 1, 0) });        
+        this.particleBody.addShape(this.particleShape);
+        this.world.addBody(this.particleBody);
+        this.particleBody.addEventListener('collide', (event) => {            
+            if(event.body.name == "enemy" && this.sprite.visible == true){                
+                event.body.object.HitMe(this.damage);
+            }          
+          });
 
         this.particle1Shape = new Sphere(1); // Radius 1
-        this.particle1Body = new Body({ mass: 10, position: new Vec3(0, 1, 0) });
+        this.particle1Body = new Body({ mass: 10, position: new Vec3(0, 1, 0) });        
         this.particle1Body.addShape(this.particle1Shape);
-        this.noActiveWorld.addBody(this.particle1Body);
-        
+        this.world.addBody(this.particle1Body);
+        this.particle1Body.addEventListener('collide', (event) => {            
+            if(event.body.name == "enemy" && this.sprite1.visible == true){
+                event.body.object.HitMe(this.damage);
+            }          
+        });
+
+        this.particle2Shape = new Sphere(1); // Radius 1
+        this.particle2Body = new Body({ mass: 10, position: new Vec3(0, 1, 0) });        
+        this.particle2Body.addShape(this.particle2Shape);
+        this.world.addBody(this.particle2Body);
+        this.particle2Body.addEventListener('collide', (event) => {            
+            if(event.body.name == "enemy" && this.sprite2.visible == true){                    
+                event.body.object.HitMe(this.damage);
+            }          
+            });
+
+        this.particle3Shape = new Sphere(1); // Radius 1
+        this.particle3Body = new Body({ mass: 10, position: new Vec3(0, 1, 0) });        
+        this.particle3Body.addShape(this.particle3Shape);
+        this.world.addBody(this.particle1Body);
+        this.particle3Body.addEventListener('collide', (event) => {            
+            if(event.body.name == "enemy" && this.sprite3.visible == true){                      
+                event.body.object.HitMe(this.damage);
+            }          
+        });
+
+
         
         cm1.scene.add(this.sprite , this.sprite1 , this.sprite2 , this.sprite3);
         
@@ -80,12 +120,66 @@ export class Shuriken extends Stuff{
 
     }
     
-    Animation(currentFrame , target , delta){   
+    Animation(currentFrame) {   
+        this.particleBody.position.copy(this.sprite.position);        
+        this.particle1Body.position.copy(this.sprite1.position);        
+        this.particle2Body.position.copy(this.sprite2.position);        
+        this.particle3Body.position.copy(this.sprite3.position);        
+        const radius = 1.5; // 캐릭터와 스프라이트 사이의 거리
+        const rotationSpeed = 0.002; // 회전 속도
+        const angle = this.target.rotation.z + currentFrame * rotationSpeed;
+
+        // 캐릭터의 현재 월드 위치를 계산
+        const charWorldPosition = this.target.position;
         
+        // 스프라이트 1 (오른쪽)
+        this.sprite.position.set(
+            charWorldPosition.x + radius * Math.cos(angle),
+            charWorldPosition.y + radius * Math.sin(angle),
+            charWorldPosition.z
+        );
+    
+        // 스프라이트 2 (왼쪽)
+        this.sprite1.position.set(
+            charWorldPosition.x + radius * Math.cos(angle + Math.PI),
+            charWorldPosition.y + radius * Math.sin(angle + Math.PI),
+            charWorldPosition.z
+        );
+    
+        // 스프라이트 3 (위쪽)
+        this.sprite2.position.set(
+            charWorldPosition.x + radius * Math.cos(angle + Math.PI / 2),
+            charWorldPosition.y + radius * Math.sin(angle + Math.PI / 2),
+            charWorldPosition.z
+        );
+    
+        // 스프라이트 4 (아래쪽)
+        this.sprite3.position.set(
+            charWorldPosition.x + radius * Math.cos(angle - Math.PI / 2),
+            charWorldPosition.y + radius * Math.sin(angle - Math.PI / 2),
+            charWorldPosition.z
+        );
+    }
 
+    objectVisible(visible , index){
 
-        console.log(this.sprite.position);
-        //this.sprite.position.copy(this.particle1Body.position);               
+        switch (index) {
+            case 1:
+                this.sprite.visible = visible;
+                break;
+            case 2:
+                this.sprite1.visible = visible;
+                break;
+            case 3:
+                this.sprite2.visible = visible;
+                break;
+            case 4:
+                this.sprite3.visible = visible;
+                break;
+            default:
+                // 모든 case와 일치하지 않을 때 실행될 코드
+        }
+
     }
     
 }
