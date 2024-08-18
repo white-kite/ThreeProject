@@ -15,6 +15,7 @@ module.exports = {
 		mainPage: './src/mainPage.js', // 추가한 파일에 대한 엔트리 포인트
 		open: './src/open.js', // 추가한 파일에 대한 엔트리 포인트
 		main: './src/main.js',
+		room: './src/room.js',
 	},
 	output: {
 		path: path.resolve('./dist'),
@@ -99,6 +100,15 @@ module.exports = {
 			  removeComments: true,
 			} : false,
 		  }),  
+		  new HtmlWebpackPlugin({
+			template: './src/room.html',
+			chunks: ['room'],
+			filename: 'room.html',
+			minify: webpackMode === 'production' ? {
+			  collapseWhitespace: true,
+			  removeComments: true,
+			} : false,
+		  }),
 		new CleanWebpackPlugin(),
 		// CopyWebpackPlugin: 그대로 복사할 파일들을 설정하는 플러그인
 		// 아래 patterns에 설정한 파일/폴더는 빌드 시 dist 폴더에 자동으로 생성됩니다.
@@ -108,6 +118,7 @@ module.exports = {
 		new CopyWebpackPlugin({
 			patterns: [
 				{ from: "./src/main.css", to: "./main.css" },
+				{ from: "./src/room.css", to: "./room.css" },
 				{ from: "./src/sakura.min.css", to: "./sakura.min.css" },
 				{ from: "./src/sakura.js", to: "./sakura.js" },				
 				{ from: "./src/models", to: "./models" },
@@ -129,8 +140,8 @@ module.exports = {
 				{ from: "./src/DNFBitBitTTF.ttf", to: "./DNFBitBitTTF.ttf" },
 				
 				{ from: "./src/models/kenney/sound", to: "./models/kenney/sound" },
-				// { from: "./src/images", to: "./images" },
-				// { from: "./src/models", to: "./models" },
+				{ from: "./src/images", to: "./images" },
+				{ from: "./src/models/room01", to: "./models" },
 				// { from: "./src/sounds", to: "./sounds" }
 			],
 		})
