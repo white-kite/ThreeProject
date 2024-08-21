@@ -8,6 +8,11 @@ body {
     top: 0;
   }
   
+  * {
+      font-family: 'DNFBitBit', sans-serif !important;	
+    cursor: url('/models/kenney/item/weapon/shuriken05.png'),url('/models/kenney/item/weapon/shuriken05.png'),url('/models/kenney/item/weapon/shuriken05.png'),	auto;
+  }
+
   /*
   #loading-screen {
     position: fixed;
