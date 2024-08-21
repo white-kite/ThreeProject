@@ -30,7 +30,7 @@ export class Enemy1 extends Stuff{
         this.curHp = this.hp;
         this.isInvincible = false; // 무적 상태를 나타내는 플래그
         this.giftArray = [];
-
+        this.playerHp = info.playerHp;
         //음량 추가
          // Three.js에서 오디오 리스너 추가
          this.listener = new THREE.AudioListener();
@@ -201,9 +201,9 @@ export class Enemy1 extends Stuff{
                 if(currentFrame == 3){
                     
                     
-                    this.curHp -= 0.1;
-                    if(this.curHp>= 0){
-                        this.attakFunc(this.curHp);
+                    this.playerHp -= 0.1;
+                    if(this.playerHp>= 0){
+                        this.attakFunc(this.playerHp);
                     }
                 }
                 if(target.position.x <  this.sprite.position.x){
