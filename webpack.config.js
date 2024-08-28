@@ -142,7 +142,7 @@ module.exports = {
 				{ from: "./src/models/kenney/sound", to: "./models/kenney/sound" },
 				{ from: "./src/images", to: "./images" },
 				{ from: "./src/models/room01", to: "./models" },
-				// { from: "./src/sounds", to: "./sounds" }
+				{ from: "./src/sounds", to: "./sounds" }
 			],
 		})
 	]

@@ -143,6 +143,8 @@ export default function room01() {
         scene.add(backPlane1, backPlane2);
     });
 
+    
+
     // 그리기
     function draw() {
         renderer.render(scene, camera);
@@ -163,11 +165,52 @@ export default function room01() {
     // 이벤트
     window.addEventListener("resize", setSize);
 
-
     // 초기 로딩 화면 설정
     canvas.style.display = 'none';
     loadingScreen.style.display = 'flex';
     setTimeout(hideLoadingScreen, 3000); // 3초 후 로딩 화면 숨김
+
+    /** @@@@@@@@@@@@@@오디오 설정@@@@@@@@@@@@@@@@@@ */
+    // 사운드 매니저 생성
+    const audioLoader = new THREE.AudioLoader();
+    const listener = new THREE.AudioListener();
+    const sound = new THREE.PositionalAudio(listener);
+
+    // 사운드 파일 로드
+    audioLoader.load('/sounds/joyful-snowman.mp3', function(buffer) {
+        sound.setBuffer(buffer);
+        sound.setRefDistance(20);
+        sound.setLoop(true);
+        sound.setVolume(3);
+        sound.play(); // 화면 로드시 재생
+    });
+
+    camera.add(listener);
+
+    // 오디오 객체를 씬에 추가
+    scene.add(sound);
+
+    // 사용자 인터랙션을 통한 재생/정지 버튼 생성
+    const button = document.createElement('button');
+    button.innerText = "Pause Sound"; // 디폴트로 재생 중이므로 정지 버튼 활성화
+    button.style.position = 'absolute';
+    button.style.top = '10px';
+    button.style.left = '10px';
+    button.style.zIndex = 1000;
+    document.body.appendChild(button);
+
+    let isPlaying = true; // 디폴트로 재생 중
+
+    button.addEventListener('click', function() {
+        if (isPlaying) {
+            sound.pause(); // 소리 정지
+            button.innerText = "Play Sound";
+        } else {
+            sound.play(); // 소리 재생
+            button.innerText = "Pause Sound";
+        }
+        isPlaying = !isPlaying;
+    });
 
 
     /** @@@@@@@@@@@@@@편지설정@@@@@@@@@@@@@@@@@@ */
