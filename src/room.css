@@ -118,7 +118,27 @@ body {
     bottom: 20px; /* 화면 아래에서 20px 위로 설정 */
     left: 50%; /* 화면 중앙으로 설정 */
     transform: translateX(-50%); /* 수평으로 가운데 정렬 */
+
+    text-align: center;
+    font-weight: bold;
+    padding: 10px 10px 10px 10px ;
+    background-color: lightgray;
+    text-shadow: -1px -1px black, 1px 1px white;
+    color: gray;
+    -webkit-border-radius: 7px;
+    -moz-border-radius: 7px;
+    -o-border-radius: 7px;
+    border-radius: 7px;
+    box-shadow: 0 .2em gray; 
+
+    cursor: pointer;
   }
+
+.start-btn:active {
+	box-shadow: none;
+	position: relative;
+	top: .2em;
+}
   
   #resultCnt {
     position: fixed; /* 화면에 고정 */
@@ -136,3 +156,8 @@ body {
     font-size: 18px; /* 글자 크기 설정 */
     font-weight: 400;
   }
+
+  #yesButton:hover, #noButton:hover {
+    transform: scale(1.2); /* 버튼 크기를 1.2배로 키움 */
+    transition: transform 0.3s ease; /* 부드러운 크기 변경 효과 */
+}
