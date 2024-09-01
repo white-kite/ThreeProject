@@ -286,129 +286,160 @@ export default function room01() {
 
     /* @@@@@@@@@@@@@@@@@@@@@@@@@여기서부터 클릭이벤트@@@@@@@@@@@@@@@@@@@@@@@@@@@ */
 
-    window.addEventListener('click', onDocumentClick);
+    
 
     let clickPosition = null;
     let clickedObject;
 
+    let isUIActive = false;  // UI가 활성화되어 있는지 상태를 저장하는 변수
+
     function onDocumentClick(event) {
-        event.preventDefault();
+    if (isUIActive) return; // UI가 활성화된 상태에서는 클릭 이벤트를 무시
+    event.preventDefault();
 
-        const mouse = new THREE.Vector2();
-        mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-        mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
+    const mouse = new THREE.Vector2();
+    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+    mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
 
-        const raycaster = new THREE.Raycaster();
-        raycaster.setFromCamera(mouse, camera);
+    const raycaster = new THREE.Raycaster();
+    raycaster.setFromCamera(mouse, camera);
 
-        const intersects = raycaster.intersectObject(room, true);
+    const intersects = raycaster.intersectObject(room, true);
 
-        if (intersects.length > 0) {
-            clickedObject = intersects[0].object;
-            console.log(clickedObject.name);
-            clickPosition = intersects[0].point; // 클릭한 위치 저장
+    if (intersects.length > 0) {
+        clickedObject = intersects[0].object;
+        console.log(clickedObject.name);
+        clickPosition = intersects[0].point; // 클릭한 위치 저장
 
-                if (clickedObject.name === "Wall__1_") { //편지 띄우기
-                    //showImageFullScreen('/images/letter.png', 'default');
-                    showImageFullScreen(randomImage, 'default');
-                } else if (clickedObject.name === "group_0" || /^sofa/.test(clickedObject.name) // clickedObject.name이 "sofa"로 시작하는 모든 단어를 인식
-                    || clickedObject.name.includes("leaves") || clickedObject.name.includes("Wall__5_") 
-                    || clickedObject.name.includes("window") || clickedObject.name.includes("ground")
-                    || /^Sphere/.test(clickedObject.name) || clickedObject.name.includes("g_Star012_25") 
-                    || clickedObject.name.includes("ChristmasTree")|| clickedObject.name.includes("Ground")) {
-                    showImageFullScreen('/images/question01.png', 'custom');
-                }
+        if (clickedObject.name === "Wall__1_") { // 편지 띄우기
+            showImageFullScreen(randomImage, 'default');
+        } else if (clickedObject.name === "group_0" || /^sofa/.test(clickedObject.name)
+            || clickedObject.name.includes("leaves") || clickedObject.name.includes("Wall__5_") 
+            || clickedObject.name.includes("window") || clickedObject.name.includes("ground")
+            || /^Sphere/.test(clickedObject.name) || clickedObject.name.includes("g_Star012_25") 
+            || clickedObject.name.includes("ChristmasTree") || clickedObject.name.includes("Ground")) {
+            showImageFullScreen('/images/question01.png', 'custom');
         }
     }
+}
 
+// 전역 선언
+const yesButton = document.createElement('img');
+const noButton = document.createElement('img');
+
+
+    // postionButtons를 위해 뺐음
+    if (document.getElementById('fullscreenImage')) {
+        document.getElementById('fullscreenImage').remove();
+        if (document.getElementById('yesButton')) document.getElementById('yesButton').remove();
+        if (document.getElementById('noButton')) document.getElementById('noButton').remove();
+        isUIActive = false;
+        return;
+    }
+
+    const imageElement = document.createElement('img');
+
+    function positionButtons() {
+        const imgRect = imageElement.getBoundingClientRect();
+        const btnSize = imgRect.width * 0.2;
+
+        yesButton.style.width = `${btnSize}px`;
+        yesButton.style.height = 'auto';
+        yesButton.style.left = `${imgRect.left + imgRect.width * 0.25 - btnSize / 2}px`;
+        yesButton.style.top = `${imgRect.bottom - btnSize * 1.1}px`;
+
+        noButton.style.width = `${btnSize}px`;
+        noButton.style.height = 'auto';
+        noButton.style.left = `${imgRect.left + imgRect.width * 0.75 - btnSize / 2}px`;
+        noButton.style.top = `${imgRect.bottom - btnSize * 1.1}px`;
+    };
+
+    let isYesButtonClicked = false; // 클릭 상태를 저장하는 변수
     
     // 전체 화면에 이미지를 보여주는 함수
     function showImageFullScreen(imageUrl, styleType) {
-        // 기존 이미지 요소가 있는지 확인
-        if (document.getElementById('fullscreenImage')) {
-            document.getElementById('fullscreenImage').remove();
-            return;
-        }
 
-        const imageElement = document.createElement('img');
+        if (document.getElementById('fullscreenImage')) {
+            return;  // UI가 이미 활성화된 상태라면 함수 종료
+        }
+        
         imageElement.src = imageUrl;
         imageElement.id = 'fullscreenImage';
-
+    
         if (styleType === 'custom') {
             imageElement.style.maxWidth = '90vh';
             imageElement.style.maxHeight = '70vw';
-
-            const yesButton = document.createElement('img');
+    
+            //전역선언으로 수정
+            //const yesButton = document.createElement('img');
             yesButton.src = '/images/yesBtn.png';
             yesButton.id = 'yesButton';
             yesButton.style.position = 'absolute';
             yesButton.style.zIndex = '10000';
-
-            const noButton = document.createElement('img');
+            
+            //전역선언으로 수정
+            //const noButton = document.createElement('img');
             noButton.src = '/images/noBtn.png';
             noButton.id = 'noButton';
             noButton.style.position = 'absolute';
             noButton.style.zIndex = '10000';
-
+    
             document.body.appendChild(imageElement);
             document.body.appendChild(yesButton);
             document.body.appendChild(noButton);
-
-            function positionButtons() {
-                const imgRect = imageElement.getBoundingClientRect();
-                const btnSize = imgRect.width * 0.2;
-
-                yesButton.style.width = `${btnSize}px`;
-                yesButton.style.height = 'auto';
-                yesButton.style.left = `${imgRect.left + imgRect.width * 0.25 - btnSize / 2}px`;
-                yesButton.style.top = `${imgRect.bottom - btnSize * 1.1}px`;
-
-                noButton.style.width = `${btnSize}px`;
-                noButton.style.height = 'auto';
-                noButton.style.left = `${imgRect.left + imgRect.width * 0.75 - btnSize / 2}px`;
-                noButton.style.top = `${imgRect.bottom - btnSize * 1.1}px`;
-            };
-
+    
+            isUIActive = true; // UI가 활성화된 상태로 변경
+    
+    
             imageElement.onload = positionButtons;
             window.addEventListener('resize', positionButtons);
-
+    
             const removeElements = () => {
                 imageElement.remove();
                 yesButton.remove();
                 noButton.remove();
                 window.removeEventListener('resize', positionButtons);
                 document.body.style.pointerEvents = 'auto'; // 배경 클릭 차단 해제
+                isUIActive = false; // UI가 비활성화된 상태로 변경
+                isYesButtonClicked = false; // 상태 초기화
             };
-
+    
             noButton.addEventListener('click', (event) => {
                 event.stopPropagation(); // 클릭 이벤트 전파 막기
                 removeElements();
             });
 
-            yesButton.addEventListener('click', (event) => {
+            // 기존 리스너 제거 후 새로 추가
+            yesButton.removeEventListener('click', onYesButtonClick);
+            yesButton.addEventListener('click', onYesButtonClick, { once: true }); // 클릭 이벤트를 한 번만 실행하도록 설정
+        
+            function onYesButtonClick(event) {
                 event.stopPropagation(); // 클릭 이벤트 전파 막기
-                if (clickPosition) { // 선물 놓기
-                    console.log("clickposiotn???",clickPosition);
+                event.preventDefault(); // 기본 동작 방지
+
+                if (!isYesButtonClicked) { // 클릭이 이미 처리되지 않은 경우에만 실행
                     
-                    // 선물 놓기 및 승패 판정
-                    createGiftAtClickPosition(clickedObject);
+                    if (clickPosition) { // 선물 놓기
+                        createGiftAtClickPosition(clickedObject);
+                    }
 
+                    isYesButtonClicked = true; // 클릭이 처리되었음을 기록
+                    removeElements();
                 }
-                removeElements();
-            });
-
+            }
+    
         } else {
             imageElement.style.maxWidth = '70vw';
             imageElement.style.maxHeight = '90vh';
             document.body.appendChild(imageElement);
         }
-
+    
         imageElement.style.position = 'fixed';
         imageElement.style.top = '50%';
         imageElement.style.left = '50%';
         imageElement.style.transform = 'translate(-50%, -50%)';
         imageElement.style.zIndex = '9999';
-
+    
         imageElement.addEventListener('click', (event) => {
             event.stopPropagation(); // 클릭 이벤트 전파 막기
             imageElement.remove();
@@ -416,8 +447,10 @@ export default function room01() {
             if (document.getElementById('noButton')) document.getElementById('noButton').remove();
             window.removeEventListener('resize', positionButtons);
             document.body.style.pointerEvents = 'auto'; // 배경 클릭 차단 해제
+            isUIActive = false; // UI가 비활성화된 상태로 변경
         });
     }
+    
 
     let giftBox; // 선물
     let currentGift; // 현재 존재하는 선물을 저장할 변수
@@ -471,9 +504,12 @@ export default function room01() {
     let selectedPlace;
 
     // 선물두기
-    function createGiftAtClickPosition(clickPosition) {
+    function createGiftAtClickPosition(clickedObject) {
 
-        gameCnt = --gameCnt; // 기회 한번 씀
+        console.log('선물 뒀다', gameCnt);
+
+
+        gameCnt = gameCnt - 1; // 기회 한번 씀
         let countCnt = document.getElementById('countCnt');
         countCnt.innerText = gameCnt;
 
@@ -520,7 +556,7 @@ export default function room01() {
         
             }, 1000);
         } else if( gameCnt < 1) { // 3번까지 기회 다 씀
-            setTimeout(() => {
+            
                 console.log("3번 틀림")
                 if (loadingImage) {
                     loadingImage.src = '/images/giftGivingFail.gif';
@@ -531,7 +567,7 @@ export default function room01() {
                 // 여기서 다시하기 처음으로 버튼
                 resetBtn.style.display = 'block';
 
-            }, 1000);
+            
         } else { // 잘못 둠, 기회 남아 있음
             setTimeout(() => {
                 if (loadingImage) {
@@ -563,15 +599,20 @@ export default function room01() {
 
     // 마우스 무브 이벤트 핸들러
     function onDocumentMouseMove(event) {
-        isDragging = true;
+        if (event.movementX !== 0 || event.movementY !== 0) {
+            isDragging = true;
+        }
     }
 
     // 마우스 업 이벤트 핸들러
     function onDocumentMouseUp(event) {
         const clickDuration = Date.now() - mouseDownTime;
-        if (!isDragging && clickDuration < 20) { // 200ms 이하인 경우 짧은 클릭으로 간주
+        const CLICK_THRESHOLD = 300; // 클릭으로 인식할 최대 지속 시간 (ms)
+
+        if (!isDragging && clickDuration < CLICK_THRESHOLD) {
             onDocumentClick(event);
         }
+        
         isDragging = false;
     }
 
@@ -584,8 +625,20 @@ export default function room01() {
     // resetBtn 클릭 이벤트 핸들러 추가
     const resetBtn = document.getElementById('resetBtn');
     resetBtn.addEventListener('click', () => {
+        // 카드와 버튼 요소들을 숨기기
+        const card = document.getElementById('fullscreenImage');
+        const yesButton = document.getElementById('yesButton');
+        const noButton = document.getElementById('noButton');
+    
+        if (card) card.style.display = 'none';
+        if (yesButton) yesButton.style.display = 'none';
+        if (noButton) noButton.style.display = 'none';
+
+        // 게임 상태 초기화
+        gameCnt = 3;  // 게임 횟수를 초기화합니다. 
+    
+        // 게임을 다시 시작하거나 페이지를 새로 고침
         location.reload();
-        
     });
 
 }
