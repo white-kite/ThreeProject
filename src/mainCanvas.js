@@ -230,6 +230,12 @@ export default function example2() {
 		location.href = "/main.html";
 	});
 
+	const sendGiftBtn = document.getElementById('sendGiftBtn');
+
+	sendGiftBtn.addEventListener('click', function() {		
+		location.href = "/room.html";
+	});
+
 	
 
 

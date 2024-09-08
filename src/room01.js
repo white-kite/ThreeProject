@@ -27,7 +27,7 @@ export default function room01() {
     // Camera
     const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 5000);
     // 빨간색이 x축, 초록색이 y축, 파란색이 z축
-    camera.position.set(800, 420, 1350);
+    camera.position.set(1050, 420, 1350);
     scene.add(camera);
 
     // Light
@@ -181,7 +181,7 @@ export default function room01() {
         sound.setBuffer(buffer);
         sound.setRefDistance(20);
         sound.setLoop(true);
-        sound.setVolume(3);
+        sound.setVolume(1); // 볼륨 값
         sound.play(); // 화면 로드시 재생
     });
 
@@ -598,10 +598,91 @@ const noButton = document.createElement('img');
     }
 
     // 마우스 무브 이벤트 핸들러
+    let originalScales = new Map(); // 오브젝트의 원래 크기를 저장할 Map
+    let previousHoveredObjects = []; // 이전에 Hover된 오브젝트들을 저장할 배열
+
+    // 커지게 할 오브젝트 이름을 배열로 저장
+    const scalableObjects = [
+         "group_0", "sofa", "leaves", "window", 
+        , "Sphere", "g_Star012_25", "ChristmasTree"
+    ];
+
+    // 마우스 무브 이벤트 핸들러
     function onDocumentMouseMove(event) {
         if (event.movementX !== 0 || event.movementY !== 0) {
             isDragging = true;
         }
+    
+        const mouse = new THREE.Vector2();
+        mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+        mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+    
+        const raycaster = new THREE.Raycaster();
+        raycaster.setFromCamera(mouse, camera);
+    
+        if (room) {
+            const intersects = raycaster.intersectObject(room, true);
+    
+            if (intersects.length > 0) {
+                const hoveredObject = intersects[0].object;
+                console.log(`Hovered Object: ${hoveredObject.name}`);
+    
+                if (!hoveredObject) {
+                    return;
+                }
+    
+                const isScalable = scalableObjects.some(name => hoveredObject.name.includes(name));
+                console.log(`Is Scalable: ${isScalable}`);
+    
+                if (isScalable) {
+                    const relatedObjects = findRelatedObjects(hoveredObject.name);
+                    console.log(`Related Objects: ${relatedObjects.length}`);
+    
+                    // 이전에 Hover된 오브젝트들의 크기를 원래대로 되돌림
+                    previousHoveredObjects.forEach(obj => {
+                        if (originalScales.has(obj)) {
+                            obj.scale.copy(originalScales.get(obj));
+                        }
+                    });
+    
+                    // 현재 Hover된 오브젝트들의 원래 크기를 저장하고 크기를 증가시킴
+                    relatedObjects.forEach(obj => {
+                        if (!originalScales.has(obj)) {
+                            originalScales.set(obj, obj.scale.clone());
+                            console.log(`Original Scale Set for: ${obj.name}`);
+                        }
+                        obj.scale.set(
+                            originalScales.get(obj).x * 1.2,
+                            originalScales.get(obj).y * 1.2,
+                            originalScales.get(obj).z * 1.2
+                        );
+                        console.log(`Scaled Object: ${obj.name}`);
+                    });
+    
+                    // 현재 Hover된 오브젝트들을 저장
+                    previousHoveredObjects = relatedObjects;
+                }
+            } else {
+                // 마우스가 어떤 오브젝트 위에도 있지 않으면, 이전에 Hover된 오브젝트들의 크기를 원래대로 되돌림
+                previousHoveredObjects.forEach(obj => {
+                    if (originalScales.has(obj)) {
+                        obj.scale.copy(originalScales.get(obj));
+                    }
+                });
+                previousHoveredObjects = [];
+            }
+        }
+    }
+
+    // 특정 이름과 관련된 오브젝트들을 찾는 함수
+    function findRelatedObjects(name) {
+        let relatedObjects = [];
+        room.traverse((child) => {
+            if (child.name.includes(name)) {
+                relatedObjects.push(child);
+            }
+        });
+        return relatedObjects;
     }
 
     // 마우스 업 이벤트 핸들러
