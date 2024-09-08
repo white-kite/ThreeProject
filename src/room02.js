@@ -213,10 +213,10 @@ export default function room02() {
 
     let giftBox;
     const letterImages = [
-        '/images/책상위민지.png',
-        '/images/현미경별수지.png',
-        '/images/포도나무하늘.png',
-        '/images/해적왕루피.png'
+        '/images/letters/책상위민지.png',
+        '/images/letters/현미경별수지.png',
+        '/images/letters/포도나무하늘.png',
+        '/images/letters/해적왕루피.png'
     ];
     const giftBoxPosition = [
         { "x" : 0.3 , "y" : 2.55 , "z" : -1.6 }, // 책상위 좌표
