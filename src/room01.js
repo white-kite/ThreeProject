@@ -175,15 +175,16 @@ export default function room01() {
     // 사운드 매니저 생성
     const audioLoader = new THREE.AudioLoader();
     const listener = new THREE.AudioListener();
-    const sound = new THREE.PositionalAudio(listener);
+    //const sound = new THREE.PositionalAudio(listener);
+    const sound = new THREE.Audio(listener);
 
+    // 사운드 파일 로드
     // 사운드 파일 로드
     audioLoader.load('/sounds/joyful-snowman.mp3', function(buffer) {
         sound.setBuffer(buffer);
-        sound.setRefDistance(20);
         sound.setLoop(true);
         sound.setVolume(0.2);
-        sound.play(); // 화면 로드시 재생
+        sound.play();
     });
 
     camera.add(listener);
@@ -200,7 +201,6 @@ export default function room01() {
     button.style.zIndex = 1000;
     document.body.appendChild(button);
 
-    sound.position.copy(camera.position);
     
     let isPlaying = true; // 디폴트로 재생 중
 
@@ -557,6 +557,7 @@ const noButton = document.createElement('img');
 
                 // 여기서 다시하기 처음으로 버튼
                 resetBtn.style.display = 'block';
+                restartBtn.style.display = 'block';
         
             }, 1000);
         } else if( gameCnt < 1) { // 3번까지 기회 다 씀
@@ -570,7 +571,7 @@ const noButton = document.createElement('img');
 
                 // 여기서 다시하기 처음으로 버튼
                 resetBtn.style.display = 'block';
-
+                restartBtn.style.display = 'block';
             
         } else { // 잘못 둠, 기회 남아 있음
             setTimeout(() => {
@@ -773,6 +774,25 @@ const noButton = document.createElement('img');
     
         // 게임을 다시 시작하거나 페이지를 새로 고침
         location.reload();
+    });
+
+    // restartBtn 클릭 이벤트
+    const restart = document.getElementById('restartBtn');
+    restartBtn.addEventListener('click', () => {
+        // 카드와 버튼 요소들을 숨기기
+        const card = document.getElementById('fullscreenImage');
+        const yesButton = document.getElementById('yesButton');
+        const noButton = document.getElementById('noButton');
+    
+        if (card) card.style.display = 'none';
+        if (yesButton) yesButton.style.display = 'none';
+        if (noButton) noButton.style.display = 'none';
+
+        // 게임 상태 초기화
+        gameCnt = 3;  // 게임 횟수를 초기화합니다. 
+    
+        // 다시 open.html로 
+        location.href = "/open.html";
     });
 
 }
