@@ -182,7 +182,7 @@ export default function room01() {
         sound.setBuffer(buffer);
         sound.setRefDistance(20);
         sound.setLoop(true);
-        sound.setVolume(1); // 볼륨 값
+        sound.setVolume(0.2);
         sound.play(); // 화면 로드시 재생
     });
 
@@ -200,6 +200,8 @@ export default function room01() {
     button.style.zIndex = 1000;
     document.body.appendChild(button);
 
+    sound.position.copy(camera.position);
+    
     let isPlaying = true; // 디폴트로 재생 중
 
     button.addEventListener('click', function() {
