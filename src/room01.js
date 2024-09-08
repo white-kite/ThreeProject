@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
+import gsap from "gsap";
 
 export default function room01() {
     
@@ -313,7 +314,8 @@ export default function room01() {
 
         if (clickedObject.name === "Wall__1_") { // 편지 띄우기
             showImageFullScreen(randomImage, 'default');
-        } else if (clickedObject.name === "group_0" || /^sofa/.test(clickedObject.name)
+        } else if (clickedObject.name === "group_0" || clickedObject.name === "group_1" // 양말
+            || /^sofa/.test(clickedObject.name)
             || clickedObject.name.includes("leaves") || clickedObject.name.includes("Wall__5_") 
             || clickedObject.name.includes("window") || clickedObject.name.includes("ground")
             || /^Sphere/.test(clickedObject.name) || clickedObject.name.includes("g_Star012_25") 
@@ -531,7 +533,7 @@ const noButton = document.createElement('img');
             selectedPlace='window';
             giftBox.position.set(-70,-20, 730);
             console.log(selectedPlace);
-        } else if (clickedObject.name === "group_0" || clickedObject.name.includes("Ground") || clickedObject.name.includes("ground") ) {
+        } else if (clickedObject.name === "group_0" || clickedObject.name === "group_1" || clickedObject.name.includes("Ground") || clickedObject.name.includes("ground") ) {
             selectedPlace='ground';
             giftBox.position.set(297, -20, 750);
             console.log(selectedPlace);
@@ -597,92 +599,141 @@ const noButton = document.createElement('img');
         mouseDownTime = Date.now();
     }
 
-    // 마우스 무브 이벤트 핸들러
     let originalScales = new Map(); // 오브젝트의 원래 크기를 저장할 Map
     let previousHoveredObjects = []; // 이전에 Hover된 오브젝트들을 저장할 배열
-
-    // 커지게 할 오브젝트 이름을 배열로 저장
-    const scalableObjects = [
-         "group_0", "sofa", "leaves", "window", 
-        , "Sphere", "g_Star012_25", "ChristmasTree"
-    ];
+    let originalPositions = new Map(); // 오브젝트의 원래 위치를 저장할 Map, 별 위치를 위해
 
     // 마우스 무브 이벤트 핸들러
     function onDocumentMouseMove(event) {
         if (event.movementX !== 0 || event.movementY !== 0) {
             isDragging = true;
         }
-    
+
         const mouse = new THREE.Vector2();
         mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
         mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-    
+
         const raycaster = new THREE.Raycaster();
         raycaster.setFromCamera(mouse, camera);
-    
+
         if (room) {
             const intersects = raycaster.intersectObject(room, true);
-    
+
             if (intersects.length > 0) {
                 const hoveredObject = intersects[0].object;
                 console.log(`Hovered Object: ${hoveredObject.name}`);
-    
+
                 if (!hoveredObject) {
                     return;
                 }
-    
-                const isScalable = scalableObjects.some(name => hoveredObject.name.includes(name));
-                console.log(`Is Scalable: ${isScalable}`);
-    
-                if (isScalable) {
-                    const relatedObjects = findRelatedObjects(hoveredObject.name);
-                    console.log(`Related Objects: ${relatedObjects.length}`);
-    
-                    // 이전에 Hover된 오브젝트들의 크기를 원래대로 되돌림
-                    previousHoveredObjects.forEach(obj => {
-                        if (originalScales.has(obj)) {
-                            obj.scale.copy(originalScales.get(obj));
-                        }
-                    });
-    
-                    // 현재 Hover된 오브젝트들의 원래 크기를 저장하고 크기를 증가시킴
-                    relatedObjects.forEach(obj => {
-                        if (!originalScales.has(obj)) {
-                            originalScales.set(obj, obj.scale.clone());
-                            console.log(`Original Scale Set for: ${obj.name}`);
-                        }
-                        obj.scale.set(
-                            originalScales.get(obj).x * 1.2,
-                            originalScales.get(obj).y * 1.2,
-                            originalScales.get(obj).z * 1.2
-                        );
-                        console.log(`Scaled Object: ${obj.name}`);
-                    });
-    
-                    // 현재 Hover된 오브젝트들을 저장
-                    previousHoveredObjects = relatedObjects;
+
+                // 이전에 Hover된 오브젝트들의 크기를 원래대로 되돌림
+                resetHoveredObjects();
+
+                // 조건에 맞는 객체에 대해 스케일 조정 및 발광 효과 적용
+                if (hoveredObject.name === "group_0" || hoveredObject.name.includes("group_1")) { // 양말
+                    scaleAndEmissiveObjects(["group_0", "group_1"], 1.2); // 1.2배로 크기 증가
+                } 
+                else if (hoveredObject.name.includes("sofa")) { // 소파 그룹
+                    scaleAndEmissiveObjectsByIncludes("sofa", 1.2); 
+                }
+                else if (hoveredObject.name === "leaves" || hoveredObject.name === "ChristmasTree" || 
+                    hoveredObject.name === "g_Star012_25" || hoveredObject.name.includes("Sphere")) {
+                    console.log(`Tree Hovered Object: ${hoveredObject.name}`); // 트리 오브젝트 이름 확인
+                    scaleAndEmissiveObjectsByIncludes("ChristmasTree", 1.1); // 트리 관련 이름을 포함하는 모든 객체 처리
+                    scaleAndEmissiveObjectsByIncludes("leaves", 1.1); // 트리 잎 부분
+                    scaleAndEmissiveObjectsByIncludes("g_Star012_25", 1.2); // 별 장식
+                    scaleAndEmissiveObjectsByIncludes("Sphere", 1.1); // 구형 장식
                 }
             } else {
                 // 마우스가 어떤 오브젝트 위에도 있지 않으면, 이전에 Hover된 오브젝트들의 크기를 원래대로 되돌림
-                previousHoveredObjects.forEach(obj => {
-                    if (originalScales.has(obj)) {
-                        obj.scale.copy(originalScales.get(obj));
-                    }
-                });
-                previousHoveredObjects = [];
+                resetHoveredObjects();
             }
         }
     }
 
-    // 특정 이름과 관련된 오브젝트들을 찾는 함수
-    function findRelatedObjects(name) {
-        let relatedObjects = [];
-        room.traverse((child) => {
-            if (child.name.includes(name)) {
-                relatedObjects.push(child);
+    // 여러 객체에 대해 스케일과 발광 효과를 적용하는 함수
+    function scaleAndEmissiveObjects(objectNames, scaleMultiplier) {
+        objectNames.forEach(objectName => {
+            const object = room.getObjectByName(objectName);
+            if (object) {
+                scaleObjectAndApplyEmissive(object, scaleMultiplier);
             }
         });
-        return relatedObjects;
+    }
+
+    // 이름에 포함된 모든 객체에 대해 스케일과 발광 효과를 적용하는 함수
+    function scaleAndEmissiveObjectsByIncludes(namePart, scaleMultiplier) {
+        room.traverse((object) => {
+            if (object.name.includes(namePart)) {
+                scaleObjectAndApplyEmissive(object, scaleMultiplier);
+            }
+        });
+    }
+
+    // 객체의 스케일을 조정하고 발광 효과를 적용하는 함수
+    function scaleObjectAndApplyEmissive(object, scaleMultiplier) {
+        // 객체의 원래 크기를 저장
+        if (!originalScales.has(object)) {
+            originalScales.set(object, object.scale.clone()); // 원래 스케일 저장
+        }
+
+        // 트리의 별 장식 처리
+        if (object.name === "g_Star012_25") {
+            
+            // 별 장식의 원래 위치를 저장
+            if (!originalPositions.has(object)) {
+                originalPositions.set(object, object.position.clone()); // 원래 위치 저장
+            }
+            // 커졌을 때 별을 Y축으로 올리고, X축으로 약간 왼쪽으로 이동
+            object.position.set(
+                originalPositions.get(object).x - 500, // X축으로 왼쪽 이동 (음수 값)
+                originalPositions.get(object).y + 80, // Y축으로 위로 이동 (양수 값)
+                originalPositions.get(object).z
+            );
+
+            object.updateMatrixWorld();  // 행렬을 강제로 갱신
+
+        }
+
+        // 객체의 크기를 증가
+        object.scale.set(
+            originalScales.get(object).x * scaleMultiplier,
+            originalScales.get(object).y * scaleMultiplier,
+            originalScales.get(object).z * scaleMultiplier
+        );
+
+        // 발광 효과 적용
+        applyEmissiveEffect(object, 0xffd700, 0.2); // 노란색 발광 효과
+        previousHoveredObjects.push(object); // 현재 Hover된 객체 저장
+    }
+
+    // Hover된 오브젝트들의 크기 및 발광 효과를 원래대로 되돌림
+    function resetHoveredObjects() {
+        previousHoveredObjects.forEach(obj => {
+            if (originalScales.has(obj)) {
+                obj.scale.copy(originalScales.get(obj)); // 원래 스케일 복원
+            }
+
+            // 별 장식의 위치를 원래대로 복원
+            if (obj.name === "g_Star012_25" && originalPositions.has(obj)) {
+                obj.position.copy(originalPositions.get(obj)); // 원래 위치 복원
+            }
+
+            // 발광 효과 해제
+            applyEmissiveEffect(obj, 0x000000, 0); // 발광 해제
+        });
+        previousHoveredObjects = [];
+    }
+
+    // 객체 발광 효과 함수
+    function applyEmissiveEffect(object, emissiveColor, intensity) {
+        object.traverse((child) => {
+            if (child.isMesh) {
+                child.material.emissive = new THREE.Color(emissiveColor);
+                child.material.emissiveIntensity = intensity;
+            }
+        });
     }
 
     // 마우스 업 이벤트 핸들러
