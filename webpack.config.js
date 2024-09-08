@@ -119,6 +119,7 @@ module.exports = {
 			patterns: [
 				{ from: "./src/main.css", to: "./main.css" },
 				{ from: "./src/room.css", to: "./room.css" },
+				{ from: "./src/room02.css", to: "./room02.css" },
 				{ from: "./src/sakura.min.css", to: "./sakura.min.css" },
 				{ from: "./src/sakura.js", to: "./sakura.js" },				
 				{ from: "./src/models", to: "./models" },
