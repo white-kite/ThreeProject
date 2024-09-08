@@ -777,7 +777,7 @@ const noButton = document.createElement('img');
     });
 
     // restartBtn 클릭 이벤트
-    const restart = document.getElementById('restartBtn');
+    const restartBtn = document.getElementById('restartBtn');
     restartBtn.addEventListener('click', () => {
         // 카드와 버튼 요소들을 숨기기
         const card = document.getElementById('fullscreenImage');
