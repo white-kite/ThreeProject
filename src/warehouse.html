@@ -163,8 +163,23 @@
     </div>
 
     <script>
+
+        let giftsArray = JSON.parse(localStorage.getItem('gifts'));
+        let gifts  = [];
+        // storedArray가 유효한 배열인지 확인
+        if (Array.isArray(giftsArray)) {
+        // 배열을 반복하는 for 루프
+        for (let i = 0; i < giftsArray.length; i++) {
+            const item = giftsArray[i];
+            gifts.push({ src: item, desc: '빨간 선물 상자' });
+        }
+        } else {
+        console.log('storedArray는 유효한 배열이 아닙니다.');
+        }
+
+        /*
         // 미리 정의된 선물 배열
-        const gifts = [
+        let gifts = [
             { src: '/models/kenney/item/gift/gift1.png', desc: '빨간 선물 상자' },
             { src: '/models/kenney/item/gift/gift2.png', desc: '초록 선물 상자' },
             { src: '/models/kenney/item/gift/gift3.png', desc: '노란 선물 상자' },
@@ -176,7 +191,7 @@
             { src: '/models/kenney/item/gift/gift9.png', desc: '금색 선물 상자' },
             { src: '/models/kenney/item/gift/gift10.png', desc: '파랑 선물 상자' }
         ];
-
+        */
         // 인벤토리 그리드에 아이템을 추가하는 함수
         function loadGifts() {
             const inventoryGrid = document.getElementById('inventory-grid');
