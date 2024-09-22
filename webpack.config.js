@@ -83,7 +83,7 @@ module.exports = {
 		  }),
 		new HtmlWebpackPlugin({
 			template: './src/warehouse.html',
-			chunks: ['open'],
+			chunks: [''],
 			filename: 'warehouse.html',
 			minify: webpackMode === 'production' ? {
 			  collapseWhitespace: true,

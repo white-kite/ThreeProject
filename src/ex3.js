@@ -22,6 +22,9 @@ import { World, Body, Sphere , Vec3 , Box  } from 'cannon-es';
 // ----- 주제: 클릭한 Mesh 선택하기
 
 export default function example() {
+
+	var compensatoryTime = false;
+
 	// Renderer
     const cubeTextureLoader = new THREE.CubeTextureLoader();
 	const canvas = document.querySelector('#three-canvas');
@@ -351,7 +354,13 @@ export default function example() {
 	world.addBody(sphereBody2);
 	*/
 	
-	var enemy1 = new Enemy1({three:THREE , attakFunc : updateHP , world:world , hp: 100 , camera: camera , playerHp: 1});
+	var enemy1 = new Enemy1({three:THREE , attakFunc : updateHP , world:world , hp: 1 , camera: camera , playerHp: 1, enemyDie: enemyDie , position: new THREE.Vector3(0, 5, 0)});
+	var enemy2 = new Enemy1({three:THREE , attakFunc : updateHP , world:world , hp: 1 , camera: camera , playerHp: 1, enemyDie: enemyDie , position: new THREE.Vector3(0, -5, 0)});
+	var enemy3 = new Enemy1({three:THREE , attakFunc : updateHP , world:world , hp: 1 , camera: camera , playerHp: 1, enemyDie: enemyDie , position: new THREE.Vector3(5, 0, 0)});
+	var enemy4 = new Enemy1({three:THREE , attakFunc : updateHP , world:world , hp: 1 , camera: camera , playerHp: 1, enemyDie: enemyDie , position: new THREE.Vector3(-5, 5, 0)});
+	
+	
+	
 	
 	var holyWater = new HolyWater({three:THREE , world2:world , noActiveWorld : noActiveWorld});
 	var shuriken = new Shuriken({three:THREE , world2:world , noActiveWorld : noActiveWorld , target: sprite, damage: 1});		
@@ -448,13 +457,19 @@ export default function example() {
 		wallRight.position.set(camera.position.x + frustumWidth / 2 - wallThickness / 2, 0, 0);
 	}
 	function draw(time) {	
-		
+		if(compensatoryTime == true){
+			renderer.render(cm1.scene, camera);
+			renderer.setAnimationLoop(draw);
+			return;			
+		}
 		if(santaIsDead == true){
 
 			const gameOverElement = document.getElementById('game_over');
+			gameOverElement.style.display = 'block';
 			gameOverElement.style.zIndex = '10'; // 원하는 z-index 값으로 설정
 
 			const buttonContainer = document.getElementById('button-container');
+			buttonContainer.style.display = 'block';
 			buttonContainer.style.zIndex = '10'; // 원하는 z-index 값으로 설정
 
 
@@ -511,6 +526,12 @@ export default function example() {
 			currentFrame = (currentFrame + 1) % frameCount; // 다음 프레임 인덱스 계산
 
 			enemy1.Animation(currentFrame , sprite , delta);
+			enemy2.Animation(currentFrame , sprite , delta);
+			enemy3.Animation(currentFrame , sprite , delta);
+			enemy4.Animation(currentFrame , sprite , delta);
+			
+			
+			
 			//particle1.Animation(currentFrame , sprite , delta);
 			holyWater.Animation(currentFrame , sprite , delta);
 			if(idleState == true){
@@ -703,6 +724,41 @@ export default function example() {
 			santaIsDead = true;
 		}
 
+	}
+
+	// HP 게이지 업데이트 함수
+	function enemyDie(xp) {
+		
+		/*
+		const gameOverElement = document.getElementById('slot-div-container');
+		gameOverElement.style.display = 'flex';
+		gameOverElement.style.zIndex = '10'; // 원하는 z-index 값으로 설정
+		compensatoryTime = true;
+		*/
+		const expBar = document.getElementById('exp-bar');
+		let currentWidth = expBar.style.width; // 현재 width 값, 예: "1%"
+
+		// 현재 width가 % 단위인지 확인하고, 숫자만 추출
+		if (currentWidth.endsWith('%')) {
+			let numericValue = parseFloat(currentWidth); // "1%"에서 1을 추출
+
+			// 경험치 추가
+			let newWidthValue = numericValue + (xp*30);
+
+			// newWidthValue가 100 이상인 경우 처리
+			if (newWidthValue >= 100) {
+				newWidthValue = newWidthValue - 100; // 100을 넘어가면 0으로 초기화
+				const slotDivContainer = document.getElementById('slot-div-container');
+				slotDivContainer.style.display = 'flex';
+				slotDivContainer.style.zIndex = '10'; // 원하는 z-index 값으로 설정
+				compensatoryTime = true;
+			}
+
+			// 새로운 width 값을 설정
+			expBar.style.width = newWidthValue + "%";
+			// alert(expBar.style.width); // 새로운 width 값 출력
+		}
+		
 	}
 
 	function setSize() {
