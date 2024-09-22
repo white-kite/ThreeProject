@@ -229,6 +229,23 @@
             // 가져가기 버튼 클릭 이벤트 리스너
             takeButton.addEventListener('click', () => {
                 alert('선물을 가져갑니다!');
+                console.log('ddd', selectedGiftText.textContent.substr(0,2));
+                
+                
+                // 갈색, 빨강, 하양, 초록, 파랑
+                if(selectedGiftText.textContent.substr(0,2) === '갈색' || '빨간' || '하얀' || '초록' || '파랑' ) {
+                    localStorage.setItem('url', 'room01');
+                    localStorage.setItem('giftColor', selectedGiftText.textContent.substr(0,2));
+                } else {
+                    localStorage.setItem('url', 'room02');
+                    localStorage.setItem('giftColor', selectedGiftText.textContent.substr(0,2));
+                };
+
+                // 화면 이동
+                location.href = "/room.html";
+
+                // 이 화면에서 가져가기 하는 선물 빼기
+                
             });
         }
 
