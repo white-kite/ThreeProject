@@ -235,8 +235,24 @@ export default function room01() {
 
     // 랜덤 이미지 선택 함수
     function getRandomImage(imagesArray) {
-        const randomIndex = Math.floor(Math.random() * imagesArray.length);
-        selectedImage = imagesArray[randomIndex];
+        //const randomIndex = Math.floor(Math.random() * imagesArray.length);
+        //selectedImage = imagesArray[randomIndex];
+        
+        const localImage = localStorage.getItem('giftColor');
+
+        // '갈색' '빨간' '하얀'  '초록'  '파랑'
+        if(localImage === '갈색'){
+            selectedImage = imagesArray[0];
+        } else if(localImage === '빨간'){
+            selectedImage = imagesArray[1];
+        } else if(localImage === '하얀'){
+            selectedImage = imagesArray[2];
+        } else if(localImage === '초록'){
+            selectedImage = imagesArray[3];
+        } else if(localImage === '파랑'){
+            selectedImage = imagesArray[4];
+        }
+        
         console.log(`Selected image: ${selectedImage}`); // 선택된 이미지 파일 경로 출력 // 이걸로 게임의 승리 실패 조건 만들기
         
         // 승리 실패 조건 설정
