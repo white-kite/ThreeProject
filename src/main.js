@@ -1,9 +1,4 @@
-import CompanyGreetCanvas from './JsZip/Company/CompanyGreet';
-import RndCanvas from './JsZip/Business/Rnd';
-import PartnerCompCanvas from './JsZip/Performance/PartnerComp';
-import CustRefCanvas from './JsZip/Performance/CustRef';
+import example from './ex3';
+// import example from './ex02';
 
-CompanyGreetCanvas();
-RndCanvas();
-PartnerCompCanvas();
-CustRefCanvas();
+example();
