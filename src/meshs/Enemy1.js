@@ -24,13 +24,16 @@ export class Enemy1 extends Stuff{
         this.enemyLeftAttackArray = [];
         var frameCount = 6;
         this.attakFunc = info.attakFunc;
+        this.enemyDie = info.enemyDie;
         this.world = info.world;
         this.hp = info.hp;       
         this.isDead = false;  
         this.curHp = this.hp;
         this.isInvincible = false; // 무적 상태를 나타내는 플래그
         this.giftArray = [];
-
+        this.playerHp = info.playerHp;
+        this.position = info.position;
+        console.log(this.position);
         //음량 추가
          // Three.js에서 오디오 리스너 추가
          this.listener = new THREE.AudioListener();
@@ -96,7 +99,8 @@ export class Enemy1 extends Stuff{
 
         this.sprite = new THREE.Sprite(spriteMaterial);
         
-        this.sprite.position.set(0,5,0);
+        //this.sprite.position.set(0,5,0);
+        this.sprite.position.set(this.position.x,this.position.y,this.position.z);
         
         this.sprite.material.side = THREE.DoubleSide;        
         this.sprite.scale.set(1, 1, 0); // 스프라이트 크기 조정
@@ -180,7 +184,7 @@ export class Enemy1 extends Stuff{
         this.playSound('die1'); // 대미지를 입었을 때 사운드 재생     
         this.isDead = true;
         this.particle1Body.name="선물";        
-        
+        this.enemyDie(1);
         this.sprite.material.map = this.giftArray[0]; 
         
     }
@@ -201,9 +205,9 @@ export class Enemy1 extends Stuff{
                 if(currentFrame == 3){
                     
                     
-                    this.curHp -= 0.1;
-                    if(this.curHp>= 0){
-                        this.attakFunc(this.curHp);
+                    this.playerHp -= 0.1;
+                    if(this.playerHp>= 0){
+                        this.attakFunc(this.playerHp);
                     }
                 }
                 if(target.position.x <  this.sprite.position.x){

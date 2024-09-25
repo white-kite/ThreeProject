@@ -3,10 +3,11 @@ import room02 from "./room02.js";
 
 
 // 랜덤으로 jw:room01() , sm:room02() 실행
-function executeRandomRoom() {
+function executeRandomRoom() { 
+    const url = localStorage.getItem('url');
     const dynamicCss = document.getElementById('dynamic-css');
-    const randomNumber = Math.random();
-    if (randomNumber < 0.5) {
+
+    if (url === 'room01' ) {
         dynamicCss.href = "./room.css";
         room01();
     } else {

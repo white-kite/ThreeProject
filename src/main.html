@@ -8,6 +8,222 @@
 	<link rel="stylesheet" href="./main.css">
 </head>
 <body>
+	<div class="center-wrapper">
+        <div class="exp-bar-container">
+            <div class="exp-bar" id="exp-bar" style="width: 0%;"></div>
+        </div>
+    </div>
+    <!--슬롯머신-->
+	<div class="container" id="slot-div-container">
+        <div id="selectedImage"></div>
+
+        <div class="slot-machine">
+            <div class="slot-machine-header">BIG WIN</div>
+            <div class="slots">
+                <div class="slot">
+                    <div class="reel">
+                        <img src="/models/kenney/item/potion/tile008.png" alt="Item 1">
+                        <img src="/models/kenney/item/potion/tile008.png" alt="Item 2">
+                        <img src="/models/kenney/item/weapon/weapon1.png" alt="Item 3">
+                        <img src="/models/kenney/item/weapon/weapon1.png" alt="Item 4">
+                        <img src="/models/kenney/item/weapon/weapon1.png" alt="Item 5">
+                        <img src="/models/kenney/item/weapon/weapon1.png" alt="Item 6">
+                        <img src="/models/kenney/item/weapon/weapon1.png" alt="Item 7">
+                        <img src="/models/kenney/item/weapon/weapon1.png" alt="Item 8">
+                        <img src="/models/kenney/item/weapon/weapon1.png" alt="Item 9">
+                    </div>
+                </div>
+                <div class="slot">
+                    <div class="reel">
+                        <img src="/models/kenney/item/weapon/weapon1.png" alt="Item 1">
+                        <img src="/models/kenney/item/weapon/weapon1.png" alt="Item 2">
+                        <img src="/models/kenney/item/weapon/weapon1.png" alt="Item 3">
+                        <img src="/models/kenney/item/weapon/weapon1.png" alt="Item 4">
+                        <img src="/models/kenney/item/weapon/weapon1.png" alt="Item 5">
+                        <img src="/models/kenney/item/weapon/weapon1.png" alt="Item 6">
+                        <img src="/models/kenney/item/weapon/weapon1.png" alt="Item 7">
+                        <img src="/models/kenney/item/weapon/weapon1.png" alt="Item 8">
+                        <img src="/models/kenney/item/weapon/weapon1.png" alt="Item 9">
+                    </div>
+                </div>
+                <div class="slot">
+                    <div class="reel">
+                        <img src="/models/kenney/item/weapon/weapon1.png" alt="Item 1">
+                        <img src="/models/kenney/item/weapon/weapon1.png" alt="Item 2">
+                        <img src="/models/kenney/item/weapon/weapon1.png" alt="Item 3">
+                        <img src="/models/kenney/item/weapon/weapon1.png" alt="Item 4">
+                        <img src="/models/kenney/item/weapon/weapon1.png" alt="Item 5">
+                        <img src="/models/kenney/item/weapon/weapon1.png" alt="Item 6">
+                        <img src="/models/kenney/item/weapon/weapon1.png" alt="Item 7">
+                        <img src="/models/kenney/item/weapon/weapon1.png" alt="Item 8">
+                        <img src="/models/kenney/item/weapon/weapon1.png" alt="Item 9">
+                    </div>
+                </div>
+                <div class="slot">
+                    <div class="reel">
+                        <img src="/models/kenney/item/weapon/weapon1.png" alt="Item 1">
+                        <img src="/models/kenney/item/weapon/weapon1.png" alt="Item 2">
+                        <img src="/models/kenney/item/weapon/weapon1.png" alt="Item 3">
+                        <img src="/models/kenney/item/weapon/weapon1.png" alt="Item 4">
+                        <img src="/models/kenney/item/weapon/weapon1.png" alt="Item 5">
+                        <img src="/models/kenney/item/weapon/weapon1.png" alt="Item 6">
+                        <img src="/models/kenney/item/weapon/weapon1.png" alt="Item 7">
+                        <img src="/models/kenney/item/weapon/weapon1.png" alt="Item 8">
+                        <img src="/models/kenney/item/weapon/weapon1.png" alt="Item 9">
+                    </div>
+                </div>
+                <div class="lever" id="lever">
+                    <div class="lever-ball"></div>
+                </div>
+                
+            </div>
+            <div class="button-container">
+                    <button id="spinButton" class="button-slot">Spin</button>
+            </div>
+            <!--
+            <button id="spinButton"></button>
+            <button id="stopButton"></button>
+            -->
+        </div>
+    </div>
+    <script>
+        let isSpinning = false;
+        let spinInterval;
+        let canSelect = false; // 이미지를 선택할 수 있는지 여부를 제어
+
+        document.getElementById('spinButton').addEventListener('click', function() {
+            if (isSpinning) return; // 이미 돌고 있으면 중복 실행 방지
+
+            isSpinning = true;
+            canSelect = false; // 돌리기 시작하면 선택 불가
+            updateImageCursor(); // 이미지를 클릭 불가 상태로 변경
+
+            const slots = document.querySelectorAll('.reel');
+
+            spinInterval = setInterval(() => {
+                slots.forEach((reel, index) => {
+                    const totalImages = reel.querySelectorAll('img').length;
+                    const currentOffset = parseInt(reel.style.transform.replace('translateY(', '').replace('px)', '')) || 0;
+                    const nextOffset = (currentOffset - 100) % (totalImages * 50); // 이미지 하나 높이만큼 이동
+                    reel.style.transition = 'transform 0.1s linear';
+                    reel.style.transform = `translateY(${nextOffset}px)`;
+                });
+            }, 100); // 0.1초마다 슬롯을 100px씩 이동
+        });
+        /*
+        document.getElementById('stopButton').addEventListener('click', function() {
+            if (!isSpinning) return; // 돌고 있지 않으면 실행하지 않음
+
+            clearInterval(spinInterval); // 슬롯 회전 중지
+
+            const slots = document.querySelectorAll('.reel');
+            slots.forEach((reel, index) => {
+                const totalImages = reel.querySelectorAll('img').length;
+
+                // 무작위 멈춤 위치 설정
+                let randomStop = Math.floor(Math.random() * totalImages);
+                const finalOffset = -100 * randomStop;
+
+                // 부드럽게 멈추도록 애니메이션 설정
+                reel.style.transition = `transform ${0.5 + index * 0.2}s ease-out`;
+                reel.style.transform = `translateY(${finalOffset}px)`;
+            });
+
+            isSpinning = false;
+            canSelect = true; // 멈춘 후에는 선택 가능
+            updateImageCursor(); // 이미지를 클릭 가능 상태로 변경
+        });
+        */
+        
+        document.getElementById('lever').addEventListener('mousedown', function() {
+            if (!isSpinning) return;
+
+            const lever = document.getElementById('lever');
+            lever.style.top = '150px'; // 레버를 밑으로 당김
+
+            setTimeout(() => {
+                lever.style.top = '70px'; // 레버를 다시 위로 올림
+                stopSlots(); // 슬롯 멈추기
+            }, 300); // 0.3초 후에 레버를 원위치로 돌리고 슬롯을 멈춤
+        });
+        
+        function stopSlots() {
+            if (!isSpinning) return; // 돌고 있지 않으면 실행하지 않음
+
+            clearInterval(spinInterval); // 슬롯 회전 중지
+
+            const slots = document.querySelectorAll('.reel');
+            slots.forEach((reel, index) => {
+                const totalImages = reel.querySelectorAll('img').length;
+
+                // 무작위 멈춤 위치 설정
+                let randomStop = Math.floor(Math.random() * totalImages);
+                const finalOffset = -50 * randomStop;
+
+                // 부드럽게 멈추도록 애니메이션 설정
+                reel.style.transition = `transform ${0.5 + index * 0.2}s ease-out`;
+                reel.style.transform = `translateY(${finalOffset}px)`;
+            });
+
+            isSpinning = false;
+            canSelect = true; // 멈춘 후에는 선택 가능
+            updateImageCursor(); // 이미지를 클릭 가능 상태로 변경
+        }
+
+        // 이미지 클릭 가능 여부에 따라 커서 및 클릭 가능 상태 변경
+        function updateImageCursor() {
+            const images = document.querySelectorAll('.slot img');
+            images.forEach(image => {
+                if (canSelect) {
+                    image.style.cursor = 'pointer';
+                    image.addEventListener('click', handleImageClick);
+                } else {
+                    image.style.cursor = 'default';
+                    image.removeEventListener('click', handleImageClick);
+                }
+            });
+        }
+
+        // 이미지 클릭 시 실행되는 함수
+        function handleImageClick(event) {
+            
+            const selectedImageDiv = document.getElementById('selectedImage');
+            selectedImageDiv.innerHTML = ''; // 기존 이미지 제거
+            const imgElement = document.createElement('img');
+            imgElement.src = event.target.src;
+            imgElement.alt = event.target.alt;
+            imgElement.style.width = '100px';
+            imgElement.style.height = '100px';
+            selectedImageDiv.appendChild(imgElement);
+
+            // 1. localStorage에서 배열 가져오기
+            let giftsArray = JSON.parse(localStorage.getItem('gifts'));
+
+            // 2. 배열이 존재하지 않으면 빈 배열로 초기화
+            if (!Array.isArray(giftsArray)) {
+                giftsArray = [];
+            }
+
+            // 3. 배열에 새 값 추가
+            giftsArray.push(event.target.src); // 예: 새 값 6 추가
+            console.log(giftsArray);
+            // 4. 배열을 JSON 문자열로 변환하여 localStorage에 저장
+            localStorage.setItem('gifts', JSON.stringify(giftsArray));
+
+        }
+
+        // 초기 상태에서 이미지를 클릭할 수 없도록 설정
+        updateImageCursor();
+    </script>
+
+    <!--슬롯머신-->
+
+
+	<p class="game_over" style="display:none;" id="game_over">GAME OVER</p>
+	<div class="button-container" id="button-container" style="display:none;">
+        <button class="button">다시 시작하기</button>
+        <button class="button">돌아가기</button>
+    </div>
 	<canvas id="three-canvas"></canvas>
 </body>
 </html>
