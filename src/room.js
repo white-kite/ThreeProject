@@ -7,6 +7,7 @@ function executeRandomRoom() {
     const url = localStorage.getItem('url');
     const dynamicCss = document.getElementById('dynamic-css');
 
+    alert(url);
     if (url === 'room01' ) {
         dynamicCss.href = "./room.css";
         room01();

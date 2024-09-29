@@ -219,7 +219,22 @@ export default function room02() {
     ]
     
     // 분기 처리
-    const ramdomCnt = Math.floor(Math.random() * 4); // 핑크면 0, 노랑이면 1, 보라면 2, 검정이면 3
+    const giftColor = localStorage.getItem('giftColor');
+    let ramdomCnt;
+    if(giftColor){
+        if(giftColor === "핑크"){
+            ramdomCnt = 0;
+        } else if (giftColor === "노란"){
+            ramdomCnt = 1;
+        } else if (giftColor === "보라"){
+            ramdomCnt = 2;
+        } else if(giftColor === "검정"){
+            ramdomCnt = 3;
+        }
+    } else {
+        location.href = "/open.html";
+    }
+    //const ramdomCnt = Math.floor(Math.random() * 4); // 핑크면 0, 노랑이면 1, 보라면 2, 검정이면 3
     let rsltYn = "Y";
     let gameCnt = 3;
 
@@ -582,6 +597,9 @@ export default function room02() {
         let resultImg = "Fail";
         let positionCnt; // 위치값 호출 변수
         let resetBtnStyle = "block";
+
+        // localStorage 선물상자
+        let giftsArray = JSON.parse(localStorage.getItem('gifts'));
         
         // 선물상자 위치 선정
         if (lastClickedObjectName){
@@ -608,6 +626,14 @@ export default function room02() {
             rsltYn = "Y";
             resultImg = "Success";
             resetBtnStyle = "none";
+
+            // 로컬스토리지에 저장된 아이템 중 선물주기 성공한 아이템은 삭제처리 (+ 수정 필요 )
+            localStorage.removeItem('url');
+            localStorage.removeItem('giftColor');
+            
+            giftsArray = giftsArray.filter(gift => gift.desc !== giftColor +' 선물 상자');
+            localStorage.setItem('gifts', JSON.stringify(giftsArray));
+            
         }
         else {
             rsltYn = "N";
@@ -637,7 +663,7 @@ export default function room02() {
         let countCnt = document.getElementById('countCnt');
         countCnt.innerText = gameCnt;
         if(rsltYn === "Y" || gameCnt < 1){
-            location.href = "/open.html";
+            location.href = "/warehouse.html";
         } else {
             resetBtn.style.display = 'none';
             restartBtn.style.display = 'none';
@@ -671,7 +697,7 @@ export default function room02() {
         canvas.style.display = 'block';
     
         // 다시 open.html로 
-        location.href = "/open.html";
+        location.href = "/warehouse.html";
     });
 
 

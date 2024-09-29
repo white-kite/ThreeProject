@@ -172,6 +172,7 @@
         for (let i = 0; i < giftsArray.length; i++) {
             const item = giftsArray[i];
             gifts.push({ src: item, desc: '빨간 선물 상자' });
+            gifts.push({ src: item, desc: '노란 선물 상자' });
         }
         } else {
         console.log('storedArray는 유효한 배열이 아닙니다.');
@@ -189,7 +190,10 @@
             { src: '/models/kenney/item/gift/gift7.png', desc: '하늘 선물 상자' },
             { src: '/models/kenney/item/gift/gift8.png', desc: '빨강 선물 상자' },
             { src: '/models/kenney/item/gift/gift9.png', desc: '금색 선물 상자' },
-            { src: '/models/kenney/item/gift/gift10.png', desc: '파랑 선물 상자' }
+            { src: '/models/kenney/item/gift/gift10.png', desc: '파랑 선물 상자' },
+            { src: '/models/kenney/item/gift/gift11.png', desc: '핑크 선물 상자' },
+            { src: '/models/kenney/item/gift/gift12.png', desc: '검정 선물 상자' },
+            { src: '/models/kenney/item/gift/gift13.png', desc: '갈색 선물 상자' },
         ];
         */
         // 인벤토리 그리드에 아이템을 추가하는 함수
@@ -228,24 +232,25 @@
 
             // 가져가기 버튼 클릭 이벤트 리스너
             takeButton.addEventListener('click', () => {
-                alert('선물을 가져갑니다!');
-                console.log('ddd', selectedGiftText.textContent.substr(0,2));
                 
-                
-                // 갈색, 빨강, 하양, 초록, 파랑
-                if(selectedGiftText.textContent.substr(0,2) === '갈색' || '빨간' || '하얀' || '초록' || '파랑' ) {
-                    localStorage.setItem('url', 'room01');
-                    localStorage.setItem('giftColor', selectedGiftText.textContent.substr(0,2));
+                // 선택한 선물상자가 있을 경우에만 room 이동
+                if(selectedGiftText.textContent) { 
+                    let giftBoxText = selectedGiftText.textContent.substr(0,2);
+                    
+                    // 갈색, 빨강, 하양, 초록, 파랑
+                    if(giftBoxText === '갈색' || giftBoxText === '빨간' || giftBoxText === '하얀' || giftBoxText === '초록' || giftBoxText ==='파랑' ) {
+                        localStorage.setItem('url', 'room01');
+                        localStorage.setItem('giftColor', giftBoxText);
+                    } else {
+                        localStorage.setItem('url', 'room02');
+                        localStorage.setItem('giftColor', giftBoxText);
+                    };
+    
+                    // 화면 이동
+                    location.href = "/room.html";
                 } else {
-                    localStorage.setItem('url', 'room02');
-                    localStorage.setItem('giftColor', selectedGiftText.textContent.substr(0,2));
-                };
-
-                // 화면 이동
-                location.href = "/room.html";
-
-                // 이 화면에서 가져가기 하는 선물 빼기
-                
+                    alert("선물을 선택하세요!");
+                }
             });
         }
 
