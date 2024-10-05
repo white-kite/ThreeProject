@@ -807,8 +807,8 @@ const noButton = document.createElement('img');
         // 게임 상태 초기화
         gameCnt = 3;  // 게임 횟수를 초기화합니다. 
     
-        // 다시 open.html로 
-        location.href = "/open.html";
+        // 다시 warehouse.html로 
+        location.href = "/warehouse.html";
     });
 
 }

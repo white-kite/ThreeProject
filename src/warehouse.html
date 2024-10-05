@@ -132,6 +132,20 @@
         .take-button:hover {
             background-color: #cc0000;
         }
+
+        #goBackBtn {
+            position: fixed;
+            bottom: 20px;  /* 화면의 아래로부터 20px 위에 위치 */
+            left: 20px;    /* 화면의 왼쪽으로부터 20px 오른쪽에 위치 */
+            background-color: #ff0000;
+            padding: 5px 10px;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-size: 16px;  /* 글자 크기 */
+        }
     </style>
 
 	
@@ -161,6 +175,8 @@
         <div id="selected-gift-text"></div>
         <button class="take-button" id="take-button">가져가기</button>
     </div>
+
+    <button id="goBackBtn">이전화면으로 가기</button>
 
     <script>
 
@@ -256,6 +272,11 @@
 
         // 페이지 로드 시 선물 배열을 로드
         window.onload = loadGifts;
+
+        // 이전 화면으로 이동
+        document.getElementById('goBackBtn').addEventListener('click', function() {
+            location.href = "/mainPage.html";
+        });
     </script>
 </body>
 </html>
