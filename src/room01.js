@@ -8,6 +8,8 @@ export default function room01() {
     const canvas = document.querySelector("#three-canvas");
     const loadingScreen = document.getElementById('loading-screen');
     const loadingImage = document.getElementById('loading-image'); // 전역으로 선언하여 참조
+    const gameDesc = document.getElementById('gameDesc');
+    const overlay = document.getElementById('overlay');
     
     
 
@@ -74,6 +76,9 @@ export default function room01() {
     function hideLoadingScreen() {
         loadingScreen.style.display = 'none'; // 로딩화면 숨김처리
         canvas.style.display = 'block';
+
+        gameDesc.style.display = 'block';
+        overlay.style.display = 'block';
  
     }
 
