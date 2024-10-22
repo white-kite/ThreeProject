@@ -181,17 +181,19 @@
     <script>
 
         let giftsArray = JSON.parse(localStorage.getItem('gifts'));
-        let gifts  = [];
+        let gifts = [];
+
         // storedArray가 유효한 배열인지 확인
         if (Array.isArray(giftsArray)) {
-        // 배열을 반복하는 for 루프
-        for (let i = 0; i < giftsArray.length; i++) {
-            const item = giftsArray[i];
-            gifts.push({ src: item, desc: '빨간 선물 상자' });
-            gifts.push({ src: item, desc: '노란 선물 상자' });
-        }
+            // 배열을 반복하는 for 루프
+            for (let i = 0; i < giftsArray.length; i++) {
+                const item = giftsArray[i];
+
+                // item은 객체이므로, item.src와 item.alt에서 값을 가져옴
+                gifts.push({ src: item.src, desc: item.alt });
+            }
         } else {
-        console.log('storedArray는 유효한 배열이 아닙니다.');
+            console.log('giftsArray는 유효한 배열이 아닙니다.');
         }
 
         /*
@@ -251,8 +253,7 @@
                 
                 // 선택한 선물상자가 있을 경우에만 room 이동
                 if(selectedGiftText.textContent) { 
-                    let giftBoxText = selectedGiftText.textContent.substr(0,2);
-                    
+                    let giftBoxText = selectedGiftText.textContent.substr(0,2);                    
                     // 갈색, 빨강, 하양, 초록, 파랑
                     if(giftBoxText === '갈색' || giftBoxText === '빨간' || giftBoxText === '하얀' || giftBoxText === '초록' || giftBoxText ==='파랑' ) {
                         localStorage.setItem('url', 'room01');
@@ -262,6 +263,33 @@
                         localStorage.setItem('giftColor', giftBoxText);
                     };
     
+                    // 현재 선택된 이미지의 src 값 가져오기
+                    const selectedImageSrc = document.getElementById('selected-gift-image').src;
+
+                    // 로컬스토리지에서 'gifts' 배열 가져오기
+                    let giftsArray = JSON.parse(localStorage.getItem('gifts'));
+
+                    // 배열이 유효한지 확인
+                    if (Array.isArray(giftsArray)) {
+                        // 삭제할 아이템의 인덱스를 찾기
+                        const indexToRemove = giftsArray.findIndex(item => item.src === selectedImageSrc);
+
+                        if (indexToRemove !== -1) {
+                            // 해당 인덱스의 아이템을 배열에서 삭제
+                            giftsArray.splice(indexToRemove, 1);
+
+                            // 수정된 배열을 다시 로컬스토리지에 저장
+                            localStorage.setItem('gifts', JSON.stringify(giftsArray));
+
+                            console.log(`giftsArray에서 ${selectedImageSrc}를 삭제했습니다.`);
+                        } else {
+                            console.log('해당 이미지가 giftsArray에 없습니다.');
+                        }
+                    } else {
+                        console.log('giftsArray는 유효한 배열이 아닙니다.');
+                    }
+
+
                     // 화면 이동
                     location.href = "/room.html";
                 } else {
