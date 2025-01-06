@@ -464,6 +464,7 @@ export default function room02() {
     let lastClickedObjectName = "";
 
     function onDocumentClick(event) {
+        if (gameDesc.style.display == 'block') return; // 설명이 보이는 상태에서는 클릭 이벤트를 무시
         event.preventDefault();
 
         // 우클릭이면 아무 동작도 X
