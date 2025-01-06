@@ -79,7 +79,6 @@ export default function room01() {
 
         gameDesc.style.display = 'block';
         overlay.style.display = 'block';
- 
     }
 
     // 가이드라인
@@ -318,7 +317,7 @@ export default function room01() {
     let isUIActive = false;  // UI가 활성화되어 있는지 상태를 저장하는 변수
 
     function onDocumentClick(event) {
-    if (isUIActive) return; // UI가 활성화된 상태에서는 클릭 이벤트를 무시
+    if (isUIActive || gameDesc.style.display == 'block') return; // UI가 활성화된 상태, 설명이 보이는 상태에서는 클릭 이벤트를 무시
     event.preventDefault();
 
     const mouse = new THREE.Vector2();
@@ -608,6 +607,10 @@ const noButton = document.createElement('img');
                     canvas.style.display = 'block';
                 }, 3000); // 3초 후에 loadingScreen을 다시 숨김
             }, 1000);
+
+            // 여기서는 다시하기 처음으로 버튼 안보이도록
+            resetBtn.style.display = 'none';
+            restartBtn.style.display = 'none';
         }
         
     }
@@ -815,5 +818,23 @@ const noButton = document.createElement('img');
         // 다시 warehouse.html로 
         location.href = "/warehouse.html";
     });
+
+    // 우클릭시 초기화 시점으로 이동
+    document.addEventListener('contextmenu', onDocumentRightClick, false);
+
+    function onDocumentRightClick(event) {
+        event.preventDefault(); 
+
+        gsap.to(camera.position, {
+            x: 1050, 
+            y: 420, 
+            z: 1350,
+            duration: 1,
+            onUpdate: function () {
+                camera.lookAt(new THREE.Vector3(0, 0, 0));
+                controls.update(); 
+            }
+        });
+    }
 
 }
